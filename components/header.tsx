@@ -1,250 +1,51 @@
 "use client"
 
-import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { Card, CardContent } from "@/components/ui/card"
-import { Menu, User, ExternalLink, Calendar, Clock, MapPin, Download, Trash2 } from "lucide-react"
 import Link from "next/link"
-import { bookingStore } from "@/lib/booking-store"
+
+function ETHRomeLogo(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg width="32" height="32" viewBox="0 0 480 480" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <path d="M147.797 298.762C147.826 298.147 147.859 294.734 145.459 292.2C143.866 290.52 141.638 289.67 138.845 289.67C131.491 289.67 129.211 297.408 129.029 301.507L128.194 322.781L147.634 317.496L147.792 298.757L147.797 298.762Z" fill="#EFEBE6"/>
+      <path d="M95.9856 317.688C96.0192 317.184 96.0624 315.206 94.6224 313.522C93.4608 312.163 91.7328 311.41 89.4816 311.28C87.672 311.179 86.064 311.712 84.84 312.835C82.512 314.962 82.32 318.442 82.3056 318.941L81.432 337.973L95.5104 331.694L95.9856 317.683V317.688Z" fill="#EFEBE6"/>
+      <path d="M120.221 324.173V322.819L121.085 307.704C121.224 306.835 121.675 302.966 119.338 300.187C118.339 299.002 116.438 297.59 113.016 297.59C105.552 297.59 103.238 304.949 103.051 308.832L102.043 330.307L118.877 324.624L120.221 324.168V324.173Z" fill="#EFEBE6"/>
+      <path d="M303.552 336H324.427V317.357L303.552 315.71V336Z" fill="#EFEBE6"/>
+      <path d="M175.507 291.922C175.574 291.24 175.747 287.952 173.438 285.336C171.59 283.238 168.739 282.178 164.966 282.173C156.398 282.173 154.133 290.438 154.133 294.806V316.622L174.725 312.888L175.507 291.922Z" fill="#EFEBE6"/>
+      <path d="M271.09 341.17C271.09 337.238 268.488 329.808 258.643 329.808C248.798 329.808 246.197 337.238 246.197 341.17V365.203H271.094V341.17H271.09Z" fill="#EFEBE6"/>
+      <path d="M364.877 323.674L344.611 319.637V337.43L364.877 339.85V323.674Z" fill="#EFEBE6"/>
+      <path d="M288.202 374.635H269.136V398.962H288.202V374.635Z" fill="#EFEBE6"/>
+      <path d="M240.029 40.416L56.3232 335.227L240.029 439.776L423.734 335.227L240.029 40.416ZM393.562 312.437L388.066 310.814L268.608 224.026L270.84 220.901L390.83 308.078L393.562 312.437ZM240.029 240.955L215.971 207.514L240.029 220.651L264.086 207.514L240.029 240.955ZM241.949 253.714V311.981H238.109V253.714C238.742 253.8 239.381 253.848 240.034 253.848C240.686 253.848 241.32 253.8 241.949 253.714ZM209.222 220.896L211.454 224.021L182.774 244.858L181.037 241.373L209.222 220.896ZM172.766 224.76L171.034 221.285L202.253 211.142L204.418 214.171L204.509 214.445L172.766 224.76ZM216.11 230.539L218.462 233.832L196.325 264.302L194.995 259.603L216.11 230.539ZM224.539 242.342L227.314 246.23L211.176 295.891L207.12 295.949L224.539 242.342ZM214.061 201.053L240.029 161.083L265.997 201.053L240.029 215.237L214.061 201.053ZM255.518 242.347L271.032 290.098H266.995L252.744 246.235L255.518 242.347ZM261.595 233.842L263.947 230.549L308.174 291.422L303.043 290.894L261.595 233.842ZM346.613 237.542L275.467 214.426L277.81 211.147L343.435 232.469L346.613 237.538V237.542ZM324.845 202.814H280.978C281.04 201.528 280.925 200.237 280.632 198.974H322.435L324.845 202.814ZM310.546 180L276.533 191.05L274.378 187.714L308.443 176.645L310.546 180ZM298.502 160.786L270.25 181.31L268.166 178.08L296.462 157.522L298.507 160.786H298.502ZM286.018 140.866L263.846 171.384L261.614 167.923L283.819 137.357L286.018 140.866ZM267.25 110.923L269.909 115.166L255.73 158.803L253.042 154.642L267.245 110.923H267.25ZM238.118 70.6272L240.038 67.5072L241.958 70.5696V146.539C241.325 146.453 240.686 146.405 240.038 146.405C239.39 146.405 238.752 146.453 238.118 146.539V70.6224V70.6272ZM212.99 111.437L227.026 154.637L224.342 158.798L210.346 115.728L212.99 111.437ZM196.675 137.938L218.458 167.918L216.226 171.379L194.496 141.47L196.675 137.933V137.938ZM184.306 158.026L211.906 178.075L209.822 181.306L182.29 161.304L184.31 158.026H184.306ZM172.642 176.971L205.69 187.709L203.534 191.045L170.568 180.331L172.642 176.966V176.971ZM159.096 198.97H199.435C199.142 200.232 199.027 201.523 199.09 202.81H156.734L159.101 198.97H159.096ZM115.978 250.709C123.696 244.603 141.624 231.25 155.342 227.472C164.846 243.062 169.411 255.067 171.197 260.458C151.56 263.822 120.571 274.21 89.1552 293.755L115.973 250.709H115.978ZM64.6176 333.13L81.696 305.726C117.586 280.915 154.43 268.728 175.243 265.805L181.594 264.696C182.352 264.562 183.13 264.85 183.619 265.445C183.965 265.867 184.133 266.405 184.09 266.952L183.24 277.378C182.726 283.661 183.451 289.882 185.395 295.858L190.186 310.637L206.683 309.442C209.011 309.269 211.229 310.387 212.472 312.36C213.379 313.8 213.854 315.461 213.854 317.165V324.245C190.594 323.798 126.13 330.389 88.6272 346.805L64.608 333.13H64.6176ZM163.502 389.424L149.837 381.643L170.026 379.656L169.872 355.018C169.92 354.23 170.093 349.766 167.328 346.762C165.686 344.971 163.411 344.064 160.565 344.064C156.389 344.064 153.058 345.312 150.667 347.774C146.981 351.566 146.957 356.885 146.971 357.571L146.558 379.786L135.048 373.238L135.374 358.565C135.47 357.739 135.744 353.832 133.392 351.173C132.461 350.122 130.733 348.869 127.79 348.869H127.742C119.232 349.085 116.981 357.067 116.981 361.258V362.947L95.136 350.51C115.651 342.317 141.682 337.368 160.637 334.594C182.914 331.334 203.347 329.966 213.864 330.168V337.469L223.224 371.246L233.222 372.11C240.974 372.778 247.363 378.557 248.755 386.155L248.971 387.35C235.824 387.13 190.282 386.592 163.512 389.424V389.434L163.502 389.424ZM240.024 432.965L237.067 431.28L236.947 415.699C237.058 414.643 237.499 408.624 233.765 404.4C231.398 401.726 227.947 400.373 223.498 400.373C219.048 400.373 215.587 401.726 213.197 404.4C209.405 408.643 209.808 414.701 209.904 415.699V415.824L172.531 394.555C200.232 392.525 239.914 393.086 250.042 393.274L255.677 424.046H255.682L240.019 432.965H240.024ZM254.592 385.085C252.72 374.87 244.142 367.109 233.722 366.211L227.851 365.702L219.802 336.662V326.731L282.331 324.461L286.565 352.752L309.672 393.312L261.149 420.926L254.587 385.085H254.592ZM336.629 350.654C325.747 350.654 322.872 360.038 322.872 365.006V385.819L314.846 390.384L292.296 350.808L287.438 318.37L277.358 318.734V305.064C293.366 305.179 370.848 307.195 412.656 334.709L350.376 370.152V365.002H350.381C350.381 360.043 347.506 350.654 336.624 350.654H336.629Z" fill="#EFEBE6"/>
+      <path d="M203.76 342.12C201.432 339.998 198.408 339.082 194.77 339.394C184.853 340.234 182.011 349.272 181.896 353.938V378.557L208.253 377.266V353.429C208.253 353.136 208.205 346.166 203.76 342.12Z" fill="#EFEBE6"/>
+    </svg>
+  )
+}
 
 export function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [isProfileOpen, setIsProfileOpen] = useState(false)
-  const [bookings, setBookings] = useState(bookingStore.getBookings())
-
-  const menuItems = [
-    { name: "Urbe Village", href: "https://urbevillage.com", external: true },
-    { name: "City Tours", href: "/city-tours", external: false },
-    { name: "ETH Rome", href: "https://ethrome.com", external: true },
-    { name: "Hackathon", href: "https://ethrome.com/hackathon", external: true },
-  ]
-
-  // Mock user data
-  const mockUser = {
-    name: "Alex Chen",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=AlexChen",
-    email: "alex.chen@example.com"
-  }
-
-  const handleDeleteBooking = (bookingId: string) => {
-    if (confirm("Are you sure you want to delete this booking?")) {
-      bookingStore.deleteBooking(bookingId)
-      setBookings(bookingStore.getBookings()) // Refresh the list
-    }
-  }
-
-  const generateCalendarEvent = (booking: { id: string; date: string; timeSlot?: string; duration?: string; roomName: string }, type: 'gcal' | 'ical') => {
-    const startDate = new Date(booking.date)
-    const endDate = new Date(booking.date)
-    
-    // Set time based on booking type
-    if (booking.timeSlot) {
-      // For hourly bookings, parse the time
-      const [hours, minutes] = booking.timeSlot.split(':').map(Number)
-      startDate.setHours(hours, minutes, 0, 0)
-      endDate.setHours(hours + 1, minutes, 0, 0) // 1 hour duration
-    } else {
-      // For desk bookings, set default times
-      startDate.setHours(9, 0, 0, 0) // 9:00 AM
-      if (booking.duration === "4h") {
-        endDate.setHours(13, 0, 0, 0) // 1:00 PM
-      } else {
-        endDate.setHours(17, 0, 0, 0) // 5:00 PM
-      }
-    }
-
-    const title = `Booked: ${booking.roomName}`
-    const description = `Booking ID: ${booking.id}\nRoom: ${booking.roomName}\nTime: ${booking.timeSlot || booking.duration}`
-    const location = "Urbe Village"
-
-    if (type === 'gcal') {
-      // Google Calendar URL
-      const params = new URLSearchParams({
-        action: 'TEMPLATE',
-        text: title,
-        dates: `${startDate.toISOString().replace(/[-:]/g, '').split('.')[0]}Z/${endDate.toISOString().replace(/[-:]/g, '').split('.')[0]}Z`,
-        details: description,
-        location: location
-      })
-      return `https://calendar.google.com/calendar/render?${params.toString()}`
-    } else {
-      // iCal format
-      const icalContent = [
-        'BEGIN:VCALENDAR',
-        'VERSION:2.0',
-        'PRODID:-//Urbe Village//Booking System//EN',
-        'BEGIN:VEVENT',
-        `UID:${booking.id}`,
-        `DTSTART:${startDate.toISOString().replace(/[-:]/g, '').split('.')[0]}Z`,
-        `DTEND:${endDate.toISOString().replace(/[-:]/g, '').split('.')[0]}Z`,
-        `SUMMARY:${title}`,
-        `DESCRIPTION:${description.replace(/\n/g, '\\n')}`,
-        `LOCATION:${location}`,
-        'END:VEVENT',
-        'END:VCALENDAR'
-      ].join('\r\n')
-
-      const blob = new Blob([icalContent], { type: 'text/calendar' })
-      const url = URL.createObjectURL(blob)
-      return url
-    }
-  }
-
-  const handleCalendarDownload = (booking: { id: string; date: string; timeSlot?: string; duration?: string; roomName: string }, type: 'gcal' | 'ical') => {
-    if (type === 'gcal') {
-      const url = generateCalendarEvent(booking, 'gcal')
-      window.open(url, '_blank')
-    } else {
-      const url = generateCalendarEvent(booking, 'ical')
-      const link = document.createElement('a')
-      link.href = url
-      link.download = `booking-${booking.id}.ics`
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-      URL.revokeObjectURL(url)
-    }
-  }
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    return date.toLocaleDateString("en-US", {
-      weekday: "short",
-      month: "short",
-      day: "numeric",
-    })
-  }
-
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
-      <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-        {/* Left: Burger Menu */}
-        <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
-          <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="text-white hover:bg-white/20">
-              <Menu className="h-6 w-6" />
-              <span className="sr-only">Toggle menu</span>
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left" className="w-64 bg-white/95 backdrop-blur-md">
-            <SheetHeader>
-              <SheetTitle className="text-red-600">Urbe Village</SheetTitle>
-            </SheetHeader>
-            <nav className="mt-8 flex flex-col space-y-4">
-              {menuItems.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  passHref
-                  target={item.external ? "_blank" : "_self"}
-                  rel={item.external ? "noopener noreferrer" : ""}
-                  className="text-lg font-medium text-gray-700 hover:text-red-600 transition-colors"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {item.name} {item.external && <ExternalLink className="inline-block h-4 w-4 ml-1" />}
-                </Link>
-              ))}
-            </nav>
-          </SheetContent>
-        </Sheet>
+      <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+        {/* Left: ETHRome Logo Button */}
+        <Link href="/menu" passHref legacyBehavior>
+          <Button variant="ghost" className="text-white hover:bg-white/20 p-0 bg-transparent flex items-center [&_svg]:!w-8 [&_svg]:!h-8">
+            <ETHRomeLogo className="h-8 w-8" style={{ width: '32px', height: '32px' }} />
+            <span className="sr-only">Menu</span>
+          </Button>
+        </Link>
 
-        {/* Right: Profile Icon */}
-        <Sheet open={isProfileOpen} onOpenChange={setIsProfileOpen}>
-          <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="text-white hover:bg-white/20">
-              <User className="h-6 w-6" />
-              <span className="sr-only">User profile</span>
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="right" className="w-80 bg-white/95 backdrop-blur-md">
-            <SheetHeader>
-              <SheetTitle className="text-gray-900">My Profile</SheetTitle>
-            </SheetHeader>
-            
-            {/* User Info */}
-            <div className="mt-6 flex items-center space-x-3 p-4 bg-gray-50 rounded-lg">
-              <img 
-                src={mockUser.avatar} 
-                alt={mockUser.name}
-                className="w-12 h-12 rounded-full object-cover"
-              />
-              <div className="flex-1">
-                <h3 className="font-semibold text-gray-900">{mockUser.name}</h3>
-                <p className="text-sm text-gray-600">{mockUser.email}</p>
-              </div>
-              <Link href="/profile">
-                <Button variant="outline" size="sm" onClick={() => setIsProfileOpen(false)}>
-                  View Profile
-                </Button>
-              </Link>
-            </div>
-
-            {/* Bookings Section */}
-            <div className="mt-6">
-              <h4 className="font-semibold text-gray-900 mb-3">My Bookings</h4>
-              {bookings.length === 0 ? (
-                <p className="text-gray-500 text-sm">No bookings yet</p>
-              ) : (
-                <div className="space-y-3">
-                  {bookings.map((booking) => (
-                    <Card key={booking.id} className="border border-gray-200">
-                      <CardContent className="p-4">
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-2">
-                              <MapPin className="h-4 w-4 text-blue-600" />
-                              <span className="font-medium text-gray-900">{booking.roomName}</span>
-                            </div>
-                            <div className="flex items-center gap-2 mb-2">
-                              <Calendar className="h-4 w-4 text-green-600" />
-                              <span className="text-sm text-gray-600">{formatDate(booking.date)}</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <Clock className="h-4 w-4 text-purple-600" />
-                              <span className="text-sm text-gray-600">
-                                {booking.timeSlot || booking.duration}
-                              </span>
-                            </div>
-                          </div>
-                          <div className="flex flex-col gap-1">
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => handleCalendarDownload(booking, 'gcal')}
-                              className="h-8 px-2 text-xs"
-                            >
-                              <Download className="h-3 w-3 mr-1" />
-                              GCal
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => handleCalendarDownload(booking, 'ical')}
-                              className="h-8 px-2 text-xs"
-                            >
-                              <Download className="h-3 w-3 mr-1" />
-                              iCal
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => handleDeleteBooking(booking.id)}
-                              className="h-8 px-2 text-xs text-red-600"
-                            >
-                              <Trash2 className="h-3 w-3 mr-1" />
-                              Delete
-                            </Button>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              )}
-            </div>
-          </SheetContent>
-        </Sheet>
+        {/* Right: Profile Button */}
+        <Link href="/profile" passHref legacyBehavior>
+          <Button variant="ghost" className="h-auto p-0 hover:bg-transparent bg-transparent flex items-center">
+            <img
+              className="rounded-full"
+              src="/images/h-jG3ZU3_400x400.jpg"
+              alt="Profile image"
+              width={40}
+              height={40}
+              aria-hidden="true"
+            />
+            <span className="sr-only">Profile</span>
+          </Button>
+        </Link>
       </div>
     </header>
   )

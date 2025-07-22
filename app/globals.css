@@ -31,6 +31,13 @@ body {
       background-position: 0% 50%;
     }
   }
+
+  /* Dot Loader Animation */
+  .dot-loader-active {
+    opacity: 1 !important;
+    transform: scale(1.1) !important;
+    transition: all 0.2s ease-in-out;
+  }
 }
 
 @layer base {
