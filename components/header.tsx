@@ -37,7 +37,7 @@ export function Header() {
           <Button variant="ghost" className="h-auto p-0 hover:bg-transparent bg-transparent flex items-center">
             <img
               className="rounded-full"
-              src="/images/h-jG3ZU3_400x400.jpg"
+              src="/images/limoneT_eth.jpg"
               alt="Profile image"
               width={40}
               height={40}

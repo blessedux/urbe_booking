@@ -33,6 +33,7 @@ const Photo = ({
   direction,
   width,
   height,
+  lumaUrl,
   ...props
 }: {
   src: string;
@@ -41,6 +42,7 @@ const Photo = ({
   direction?: Direction;
   width: number;
   height: number;
+  lumaUrl?: string;
 }) => {
   const [rotation, setRotation] = useState<number>(0);
   const x = useMotionValue(200);
@@ -65,6 +67,21 @@ const Photo = ({
   const resetMouse = () => {
     x.set(200);
     y.set(200);
+  };
+
+  const handleClick = (e: React.MouseEvent) => {
+    // Only open link if not dragging (check if mouse moved significantly)
+    const rect = e.currentTarget.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const distance = Math.sqrt(
+      Math.pow(e.clientX - centerX, 2) + Math.pow(e.clientY - centerY, 2)
+    );
+    
+    // If click is close to center and not dragging, open link
+    if (distance < 50 && lumaUrl) {
+      window.open(lumaUrl, '_blank', 'noopener,noreferrer');
+    }
   };
 
   return (
@@ -96,10 +113,11 @@ const Photo = ({
       }}
       className={cn(
         className,
-        "relative mx-auto shrink-0 cursor-grab active:cursor-grabbing"
+        lumaUrl ? "relative mx-auto shrink-0 cursor-pointer" : "relative mx-auto shrink-0 cursor-grab active:cursor-grabbing"
       )}
       onMouseMove={handleMouse}
       onMouseLeave={resetMouse}
+      onClick={handleClick}
       draggable={false}
       tabIndex={0}
     >
@@ -126,6 +144,7 @@ const AnimatedTooltip = ({
     name: string;
     designation: string;
     image: string;
+    twitter?: string;
   }[];
   className?: string;
 }) => {
@@ -184,6 +203,17 @@ const AnimatedTooltip = ({
                 <div className="text-muted-foreground text-xs">
                   {item.designation}
                 </div>
+                {item.twitter && (
+                  <a
+                    href={item.twitter}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-400 hover:text-blue-300 text-xs mt-1 transition-colors"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    @{item.twitter.split('/').pop()}
+                  </a>
+                )}
               </motion.div>
             )}
           </AnimatePresence>
@@ -275,6 +305,7 @@ function PhotoGallery({
       zIndex: 50, // Highest z-index (on top)
       direction: "left" as Direction,
       src: "/images/luma/BirrettabytheColosseum.webp",
+      lumaUrl: "https://lu.ma/5hynsojn"
     },
     {
       id: 2,
@@ -284,6 +315,7 @@ function PhotoGallery({
       zIndex: 40,
       direction: "left" as Direction,
       src: "/images/luma/Running Rome - Urbe Village.webp",
+      lumaUrl: "https://lu.ma/fpr63zk5"
     },
     {
       id: 3,
@@ -293,6 +325,7 @@ function PhotoGallery({
       zIndex: 30,
       direction: "right" as Direction,
       src: "/images/luma/Urbe Campus - ETHRome edition.webp",
+      lumaUrl: "https://lu.ma/1u7vyqun"
     },
     {
       id: 4,
@@ -302,6 +335,7 @@ function PhotoGallery({
       zIndex: 20,
       direction: "right" as Direction,
       src: "/images/luma/Urbe Campus - ETHBari Edition.webp",
+      lumaUrl: "https://lu.ma/h9qcecja"
     },
     {
       id: 5,
@@ -311,6 +345,7 @@ function PhotoGallery({
       zIndex: 10, // Lowest z-index (at bottom)
       direction: "left" as Direction,
       src: "/images/luma/campusethnaedition.webp",
+      lumaUrl: "https://lu.ma/34dm2tlk"
     },
   ];
 
@@ -353,6 +388,7 @@ function PhotoGallery({
                     src={photo.src}
                     alt="Event photo"
                     direction={photo.direction}
+                    lumaUrl={photo.lumaUrl}
                   />
                 </motion.div>
               ))}
@@ -369,33 +405,24 @@ export default function EventsPage() {
   const eventOrganizers = [
     {
       id: 1,
-      name: "Urbe Campus",
-      designation: "Blockchain Community",
-      image: "/images/luma/Urbe Campus - ETHRome edition.webp",
+      name: "limone.eth",
+      designation: "Web3 Developer",
+      image: "/images/limoneT_eth.jpg",
+      twitter: "https://x.com/limone_eth",
     },
     {
       id: 2,
-      name: "Running Rome",
-      designation: "Fitness Community",
-      image: "/images/luma/Running Rome - Urbe Village.webp",
+      name: "deca12x",
+      designation: "Blockchain Expert",
+      image: "/images/deca12x.jpg",
+      twitter: "https://x.com/deca12x",
     },
     {
       id: 3,
-      name: "Birretta Events",
-      designation: "Social Gatherings",
-      image: "/images/luma/BirrettabytheColosseum.webp",
-    },
-    {
-      id: 4,
-      name: "ETH Communities",
-      designation: "Global Chapters",
-      image: "/images/luma/campusethnaedition.webp",
-    },
-    {
-      id: 5,
-      name: "Workshop Leaders",
-      designation: "Expert Instructors",
-      image: "/images/luma/Urbe Campus - ETHBari Edition.webp",
+      name: "Crypto Galo",
+      designation: "Community Leader",
+      image: "/images/cryptogalo.jpg",
+      twitter: "https://x.com/gallo_eth",
     },
   ];
 
