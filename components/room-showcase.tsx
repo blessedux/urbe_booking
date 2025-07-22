@@ -11,29 +11,44 @@ const Card = ({
   className,
   image,
   children,
+  isAnimating = false,
 }: {
   className?: string
   image?: string
   children?: React.ReactNode
+  isAnimating?: boolean
 }) => {
   return (
     <div
       className={cn(
-        "w-[350px] cursor-pointer h-[400px] overflow-hidden bg-white rounded-2xl shadow-[0_0_10px_rgba(0,0,0,0.02)] border border-gray-200/80",
+        "w-[350px] cursor-pointer h-[400px] overflow-hidden bg-white/90 backdrop-blur-md rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.1)] select-none",
         className
       )}
+      style={{ userSelect: 'none', WebkitUserSelect: 'none' }}
     >
       {image && (
         <div className="relative h-72 rounded-xl shadow-lg overflow-hidden w-[calc(100%-1rem)] mx-2 mt-2">
-          <img
+          <motion.img
             src={image}
             alt="card"
             className="object-cover mt-0 w-full h-full"
+            draggable={false}
+            onDragStart={(e) => e.preventDefault()}
+            initial={{ opacity: 1 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
           />
         </div>
       )}
       {children && (
-        <div className="px-4 p-2 flex flex-col gap-y-2">{children}</div>
+        <motion.div 
+          className="px-4 p-2 flex flex-col gap-y-2"
+          initial={{ opacity: 1 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
+        >
+          {children}
+        </motion.div>
       )}
     </div>
   )
@@ -67,11 +82,14 @@ const StackedCardsInteraction = ({
   onNextCard: () => void
 }) => {
   const [isAnimating, setIsAnimating] = useState(false)
-  const [touchStart, setTouchStart] = useState<number | null>(null)
-  const [touchEnd, setTouchEnd] = useState<number | null>(null)
+  const [isDragging, setIsDragging] = useState(false)
+  const [dragStartX, setDragStartX] = useState(0)
+  const [dragCurrentX, setDragCurrentX] = useState(0)
+  const [dragOffset, setDragOffset] = useState(0)
+  const [isContentAnimating, setIsContentAnimating] = useState(false)
 
   // Minimum swipe distance (in px)
-  const minSwipeDistance = 50
+  const minSwipeDistance = 80
 
   // Auto-animation timer - trigger once after 1.5s on page load
   useEffect(() => {
@@ -85,26 +103,64 @@ const StackedCardsInteraction = ({
     return () => clearTimeout(timer)
   }, [selectedRoomIndex])
 
-  const onTouchStart = (e: React.TouchEvent) => {
-    setTouchEnd(null)
-    setTouchStart(e.targetTouches[0].clientX)
+  // Content animation effect when currentCardIndex changes
+  useEffect(() => {
+    setIsContentAnimating(true)
+    const timer = setTimeout(() => {
+      setIsContentAnimating(false)
+    }, 300) // Match the animation duration
+    return () => clearTimeout(timer)
+  }, [currentCardIndex])
+
+  const handleDragStart = (e: React.TouchEvent | React.MouseEvent) => {
+    console.log("Drag start triggered")
+    if (selectedRoomIndex !== null) return // Don't allow dragging when calendar is open
+    
+    setIsDragging(true)
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
+    setDragStartX(clientX)
+    setDragCurrentX(clientX)
+    setDragOffset(0)
   }
 
-  const onTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientX)
+  const handleDragMove = (e: React.TouchEvent | React.MouseEvent) => {
+    if (!isDragging || selectedRoomIndex !== null) return
+    
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
+    setDragCurrentX(clientX)
+    setDragOffset(dragStartX - clientX)
   }
 
-  const onTouchEnd = () => {
-    if (!touchStart || !touchEnd) return
-    const distance = touchStart - touchEnd
-    const isLeftSwipe = distance > minSwipeDistance
-    const isRightSwipe = distance < -minSwipeDistance
-
-    if (isLeftSwipe) {
-      onNextCard()
+  const handleDragEnd = () => {
+    if (!isDragging || selectedRoomIndex !== null) return
+    
+    setIsDragging(false)
+    
+    // Determine swipe direction and navigate
+    if (Math.abs(dragOffset) > minSwipeDistance) {
+      if (dragOffset > 0) {
+        // Swiped left - go to next card
+        onNextCard()
+      } else {
+        // Swiped right - go to previous card
+        onPreviousCard()
+      }
     }
-    if (isRightSwipe) {
+    
+    // Reset drag state
+    setDragOffset(0)
+  }
+
+  const handleEdgeClick = (direction: 'left' | 'right') => {
+    console.log("Edge click triggered:", direction)
+    if (selectedRoomIndex !== null) return // Don't allow navigation when calendar is open
+    
+    if (direction === 'left') {
+      console.log("Calling onPreviousCard")
       onPreviousCard()
+    } else {
+      console.log("Calling onNextCard")
+      onNextCard()
     }
   }
 
@@ -113,12 +169,33 @@ const StackedCardsInteraction = ({
 
   return (
     <div 
-      className="relative w-full h-full flex items-center justify-center"
-      onTouchStart={onTouchStart}
-      onTouchMove={onTouchMove}
-      onTouchEnd={onTouchEnd}
+      className="relative w-full h-full cursor-grab active:cursor-grabbing select-none rounded-3xl backdrop-blur-sm bg-white/5"
+      style={{ userSelect: 'none', WebkitUserSelect: 'none' }}
     >
-      <div className="relative w-[350px] h-[400px]">
+      {/* Left Edge Click Area */}
+      <div 
+        className="absolute left-0 top-0 w-1/4 h-full z-20 cursor-pointer"
+        onClick={() => handleEdgeClick('left')}
+      />
+      
+      {/* Right Edge Click Area */}
+      <div 
+        className="absolute right-0 top-0 w-1/4 h-full z-20 cursor-pointer"
+        onClick={() => handleEdgeClick('right')}
+      />
+      
+      {/* Center Cards Container */}
+      <div 
+        className="absolute inset-0 flex items-center justify-center"
+        onTouchStart={handleDragStart}
+        onTouchMove={handleDragMove}
+        onTouchEnd={handleDragEnd}
+        onMouseDown={handleDragStart}
+        onMouseMove={handleDragMove}
+        onMouseUp={handleDragEnd}
+        onMouseLeave={handleDragEnd}
+      >
+        <div className="relative w-[350px] h-[400px]">
         {limitedCards.map((card, index) => {
           const isFirst = index === 0
           const isSelected = selectedRoomIndex !== null && selectedRoomIndex === index
@@ -142,11 +219,11 @@ const StackedCardsInteraction = ({
 
           return (
             <motion.div
-              key={index}
+              key={`${index}-${currentCardIndex}`}
               className={cn("absolute", isFirst ? "z-10" : "z-0")}
               initial={{ x: 0, rotate: 0, y: 0, opacity: 1, scale: 1, filter: "blur(0px)" }}
               animate={{
-                x: isAnimating && !isSelected ? xOffset : 0,
+                x: isAnimating && !isSelected ? xOffset : (isDragging ? dragOffset * 0.1 : 0),
                 rotate: isAnimating && !isSelected ? rotation : 0,
                 y: isSelected ? -50 : 0,
                 opacity: 1,
@@ -155,25 +232,30 @@ const StackedCardsInteraction = ({
                 zIndex: isSelected ? 20 : (isFirst ? 10 : 0),
               }}
               transition={{
-                duration: 0.3,
+                duration: isDragging ? 0 : 0.3,
                 ease: "easeInOut",
                 delay: index * animationDelay,
                 type: "spring",
               }}
-              {...(isCurrentCard && {
-                onClick: () => !isSelected && onCardClick?.(index),
-              })}
+              layout={false}
+              onClick={() => !isSelected && !isDragging && onCardClick?.(currentCardIndex)}
             >
               <Card
                 className={isCurrentCard ? "z-10 cursor-pointer" : "z-0"}
-                image={card.image}
+                image={isFirst ? cards[currentCardIndex].image : card.image}
+                isAnimating={isFirst && isContentAnimating}
               >
-                <h2 className="text-2xl font-bold text-gray-900">{card.title}</h2>
-                <p className="text-gray-600 text-sm">{card.description}</p>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  {isFirst ? cards[currentCardIndex].title : card.title}
+                </h2>
+                <p className="text-gray-600 text-sm">
+                  {isFirst ? cards[currentCardIndex].description : card.description}
+                </p>
               </Card>
             </motion.div>
           )
         })}
+        </div>
       </div>
     </div>
   )
@@ -206,12 +288,27 @@ export function RoomBooking() {
   }
 
   const handlePreviousCard = () => {
-    setCurrentCardIndex((prev) => (prev === 0 ? galleryItems.length - 1 : prev - 1))
+    console.log("handlePreviousCard called, current index:", currentCardIndex)
+    setCurrentCardIndex((prev) => {
+      const newIndex = prev === 0 ? galleryItems.length - 1 : prev - 1
+      console.log("Setting new index to:", newIndex)
+      return newIndex
+    })
   }
 
   const handleNextCard = () => {
-    setCurrentCardIndex((prev) => (prev === galleryItems.length - 1 ? 0 : prev + 1))
+    console.log("handleNextCard called, current index:", currentCardIndex)
+    setCurrentCardIndex((prev) => {
+      const newIndex = prev === galleryItems.length - 1 ? 0 : prev + 1
+      console.log("Setting new index to:", newIndex)
+      return newIndex
+    })
   }
+
+  // Track currentCardIndex changes
+  useEffect(() => {
+    console.log("currentCardIndex changed to:", currentCardIndex)
+  }, [currentCardIndex])
 
   // Global click handler to close calendar when clicking outside
   useEffect(() => {

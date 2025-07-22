@@ -86,7 +86,7 @@ export function BookingCalendar({ selectedRoomIndex, onBack, onBookingComplete }
     <div className="w-full max-w-md mx-auto space-y-6">
       {/* Date Selection Step */}
       {currentStep === 'date' && (
-        <div className="bg-white rounded-lg shadow-xl border">
+        <div className="bg-white/90 backdrop-blur-md rounded-lg shadow-xl border border-white/20">
           <div className="p-4 border-b">
             <h3 className="text-lg font-semibold text-gray-900">{room.name}</h3>
             <p className="text-gray-600 text-sm">Choose when you'd like to book this space</p>
@@ -104,7 +104,7 @@ export function BookingCalendar({ selectedRoomIndex, onBack, onBookingComplete }
 
       {/* Time Selection Step */}
       {currentStep === 'time' && selectedDate && (
-        <div className="bg-white rounded-lg shadow-xl border">
+        <div className="bg-white/90 backdrop-blur-md rounded-lg shadow-xl border border-white/20">
           <div className="p-4 border-b">
             <Button 
               variant="ghost" 
@@ -175,7 +175,7 @@ export function BookingCalendar({ selectedRoomIndex, onBack, onBookingComplete }
 
       {/* Loading Step */}
       {currentStep === 'loading' && (
-        <div className="bg-white rounded-lg shadow-xl border">
+        <div className="bg-white/90 backdrop-blur-md rounded-lg shadow-xl border border-white/20">
           <div className="p-4 border-b">
             <h3 className="text-lg font-semibold text-gray-900">Processing Booking</h3>
             <p className="text-gray-600 text-sm">
