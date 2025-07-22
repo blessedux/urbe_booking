@@ -10,11 +10,12 @@ import { buttonVariants } from "@/components/ui/button"
 interface CalendarProps {
   selectedDate?: Date
   onDateSelect?: (date: Date) => void
+  defaultMonth?: Date
   className?: string
 }
 
-export function Calendar({ selectedDate, onDateSelect, className }: CalendarProps) {
-  const [currentMonth, setCurrentMonth] = React.useState(new Date())
+export function Calendar({ selectedDate, onDateSelect, defaultMonth, className }: CalendarProps) {
+  const [currentMonth, setCurrentMonth] = React.useState(defaultMonth || new Date())
 
   const monthStart = startOfMonth(currentMonth)
   const monthEnd = endOfMonth(currentMonth)

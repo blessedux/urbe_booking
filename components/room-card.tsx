@@ -12,7 +12,7 @@ interface RoomCardProps {
 
 export function RoomCard({ room, onSelect }: RoomCardProps) {
   return (
-    <Card className="w-full overflow-hidden hover:shadow-lg transition-shadow">
+    <Card className="w-full overflow-hidden hover:shadow-lg transition-shadow bg-white/90 backdrop-blur-sm border-0">
       <div className="aspect-[4/3] relative bg-gray-100">
         {room.image ? (
           <Image
@@ -22,7 +22,7 @@ export function RoomCard({ room, onSelect }: RoomCardProps) {
             className="object-cover"
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-blue-100 to-indigo-100 flex items-center justify-center">
+          <div className="w-full h-full bg-gradient-to-br from-red-100 to-purple-100 flex items-center justify-center">
             <span className="text-gray-500 text-sm">No image available</span>
           </div>
         )}
@@ -37,7 +37,7 @@ export function RoomCard({ room, onSelect }: RoomCardProps) {
         <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
           {room.description}
         </p>
-        <Button onClick={() => onSelect(room.id)} className="w-full">
+        <Button onClick={() => onSelect(room.id)} className="w-full bg-red-600 hover:bg-red-700">
           Select Room
         </Button>
       </CardContent>
