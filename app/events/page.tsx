@@ -353,9 +353,11 @@ function PhotoGallery({
     <div className="mt-40 relative">
        <div className="absolute inset-0 max-md:hidden top-[200px] -z-10 h-[300px] w-full bg-transparent bg-[linear-gradient(to_right,#57534e_1px,transparent_1px),linear-gradient(to_bottom,#57534e_1px,transparent_1px)] bg-[size:3rem_3rem] opacity-20 [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)] dark:bg-[linear-gradient(to_right,#a8a29e_1px,transparent_1px),linear-gradient(to_bottom,#a8a29e_1px,transparent_1px)]"></div>
       <h3 className="z-20 mx-auto max-w-4xl justify-center py-3 text-center text-2xl text-white font-medium md:text-4xl">
-        Register for events: Urbe Campus, workshops, demo sessions, aperitivos, dinners
+        Events
       </h3>
-      <div className="relative mb-8 h-[350px] w-full items-center justify-center lg:flex">
+      
+      {/* Desktop Layout */}
+      <div className="relative mb-8 h-[350px] w-full items-center justify-center hidden lg:flex">
         <motion.div
           className="relative mx-auto flex w-full max-w-7xl justify-center"
           initial={{ opacity: 0 }}
@@ -393,6 +395,76 @@ function PhotoGallery({
                 </motion.div>
               ))}
             </div>
+          </motion.div>
+        </motion.div>
+      </div>
+
+      {/* Mobile Layout - Two Rows */}
+      <div className="lg:hidden px-4 mb-8">
+        <motion.div
+          className="grid grid-cols-2 gap-2"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: isVisible ? 1 : 0 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+        >
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate={isLoaded ? "visible" : "hidden"}
+            className="space-y-2"
+          >
+            {/* First Row */}
+            {photos.slice(0, 3).map((photo, index) => (
+              <motion.div
+                key={photo.id}
+                variants={photoVariants}
+                custom={{
+                  x: 0,
+                  y: 0,
+                  order: index,
+                }}
+                className="flex justify-center"
+              >
+                <Photo
+                  width={160}
+                  height={160}
+                  src={photo.src}
+                  alt="Event photo"
+                  direction={photo.direction}
+                  lumaUrl={photo.lumaUrl}
+                />
+              </motion.div>
+            ))}
+          </motion.div>
+          
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate={isLoaded ? "visible" : "hidden"}
+            className="space-y-2"
+          >
+            {/* Second Row */}
+            {photos.slice(3, 5).map((photo, index) => (
+              <motion.div
+                key={photo.id}
+                variants={photoVariants}
+                custom={{
+                  x: 0,
+                  y: 0,
+                  order: index + 3,
+                }}
+                className="flex justify-center"
+              >
+                <Photo
+                  width={160}
+                  height={160}
+                  src={photo.src}
+                  alt="Event photo"
+                  direction={photo.direction}
+                  lumaUrl={photo.lumaUrl}
+                />
+              </motion.div>
+            ))}
           </motion.div>
         </motion.div>
       </div>

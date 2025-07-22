@@ -24,6 +24,7 @@ import { Badge } from "@/components/ui/badge";
 import { DotLoader } from "@/components/ui/dot-loader";
 import { Header } from "@/components/header";
 
+
 //Types
 type variants = "default" | "masonry" | "polaroid";
 
@@ -64,84 +65,77 @@ const rowVariants = {
   }),
 };
 
-// Mock location data for Rome landmarks
+// Iconic Rome landmarks data
 const romeLocations = [
   {
     id: 1,
-    name: "Birretta by the Colosseum",
-    description: "Join us for a refreshing drink near the iconic Colosseum",
+    name: "Colosseum",
+    description: "The world's largest ancient amphitheatre, built in AD 70–80. Immerse yourself in history where gladiators once fought.",
     image: "/images/luma/BirrettabytheColosseum.webp",
-    category: "Event",
-    coordinates: { lat: 41.8902, lng: 12.4922 },
+    category: "Historic Landmark",
     rating: 4.8,
-    tips: "Perfect spot for networking and socializing",
-    lumaUrl: "https://lu.ma/5hynsojn"
+    tips: "Consider a night tour to avoid crowds and gain a unique perspective",
+    lumaUrl: "https://maps.google.com/?q=Colosseum,Rome"
   },
   {
     id: 2,
-    name: "Running Rome - Urbe Village",
-    description: "Explore Rome on foot with our running community",
+    name: "Trevi Fountain",
+    description: "Rome's grandest Baroque fountain (26m × 49m), designed by Nicola Salvi in the 18th century. Legend says tossing a coin guarantees your return.",
     image: "/images/luma/Running Rome - Urbe Village.webp",
-    category: "Activity",
-    coordinates: { lat: 41.9009, lng: 12.4833 },
+    category: "Fountain",
     rating: 4.7,
-    tips: "Great way to see the city while staying active",
-    lumaUrl: "https://lu.ma/fpr63zk5"
+    tips: "Roughly €3,000 are tossed in daily and later donated to charity",
+    lumaUrl: "https://maps.google.com/?q=Trevi+Fountain,Rome"
   },
   {
     id: 3,
-    name: "Urbe Campus - ETHRome Edition",
-    description: "Join the Ethereum community in Rome",
+    name: "Pantheon",
+    description: "A 2nd-century Roman temple with the world's largest unreinforced concrete dome—still in use as a church.",
     image: "/images/luma/Urbe Campus - ETHRome edition.webp",
-    category: "Conference",
-    coordinates: { lat: 41.8986, lng: 12.4769 },
+    category: "Historic Temple",
     rating: 4.9,
-    tips: "Don't miss the latest in blockchain innovation",
-    lumaUrl: "https://lu.ma/1u7vyqun"
+    tips: "Free to visit and a masterpiece of Roman architectural innovation",
+    lumaUrl: "https://maps.google.com/?q=Pantheon,Rome"
   },
   {
     id: 4,
-    name: "Urbe Campus - ETHBari Edition",
-    description: "Ethereum community gathering in Bari",
+    name: "Vatican Museums + Sistine Chapel",
+    description: "World-class art—including Michelangelo's frescoes in the Sistine Chapel and masterpieces in St. Peter's Basilica.",
     image: "/images/luma/Urbe Campus - ETHBari Edition.webp",
-    category: "Conference",
-    coordinates: { lat: 41.9069, lng: 12.4534 },
+    category: "Museum",
     rating: 4.8,
-    tips: "Connect with blockchain enthusiasts",
-    lumaUrl: "https://lu.ma/h9qcecja"
+    tips: "Book tickets in advance to avoid long queues",
+    lumaUrl: "https://maps.google.com/?q=Vatican+Museums,Rome"
   },
   {
     id: 5,
-    name: "Urbe Campus - ETHNA Edition",
-    description: "North American Ethereum community meetup",
+    name: "Spanish Steps",
+    description: "Baroque stairway of 135 steps linking Piazza di Spagna with Trinità dei Monti. A romantic and culturally rich gathering spot.",
     image: "/images/luma/campusethnaedition.webp",
-    category: "Conference",
-    coordinates: { lat: 41.8992, lng: 12.4731 },
+    category: "Historic Site",
     rating: 4.6,
-    tips: "Network with NA blockchain developers",
-    lumaUrl: "https://lu.ma/34dm2tlk"
+    tips: "Best visited early morning or late evening for fewer crowds",
+    lumaUrl: "https://maps.google.com/?q=Spanish+Steps,Rome"
   },
   {
     id: 6,
-    name: "Urbe Campus ETHWarsaw",
-    description: "Polish Ethereum community gathering",
+    name: "Roman Forum",
+    description: "The heart of ancient Rome, featuring ruins of government buildings, temples, and public spaces from the Roman Empire.",
     image: "/images/luma/urbecampusethwarwaw.webp",
-    category: "Conference",
-    coordinates: { lat: 41.8925, lng: 12.4853 },
+    category: "Archaeological Site",
     rating: 4.7,
-    tips: "Experience the Warsaw blockchain scene",
-    lumaUrl: "https://lu.ma/zh1afxhe"
+    tips: "Combine with Colosseum visit for a complete ancient Rome experience",
+    lumaUrl: "https://maps.google.com/?q=Roman+Forum,Rome"
   },
   {
     id: 7,
-    name: "10 Years of Ethereum - Rome",
-    description: "Celebrating a decade of Ethereum innovation",
+    name: "St. Peter's Basilica",
+    description: "The largest church in the world and the center of the Catholic Church, featuring stunning Renaissance architecture.",
     image: "/images/luma/10yearseth.webp",
-    category: "Celebration",
-    coordinates: { lat: 41.8897, lng: 12.4692 },
+    category: "Church",
     rating: 4.5,
-    tips: "Join the celebration of blockchain history",
-    lumaUrl: "https://lu.ma/bk5s41kn"
+    tips: "Dress modestly and arrive early to avoid security lines",
+    lumaUrl: "https://maps.google.com/?q=St+Peter+Basilica,Vatican"
   }
 ];
 
@@ -327,19 +321,20 @@ const LocationCard = ({ location }: { location: typeof romeLocations[0] }) => {
       onClick={handleCardClick}
     >
       <div className="w-full h-full bg-gradient-to-br from-red-100 to-orange-100 rounded-lg overflow-hidden relative">
-        {/* Actual image */}
-        <div className="w-full h-full">
+        {/* Image container */}
+        <div className="w-full h-full relative">
           <img 
             src={location.image} 
             alt={location.name}
             className="pointer-events-none absolute h-full w-full object-cover"
             onError={(e) => {
-              // Fallback to placeholder if image fails to load
+              // Fallback to placeholder if image fails
               const target = e.target as HTMLImageElement;
               target.style.display = 'none';
               target.nextElementSibling?.classList.remove('hidden');
             }}
           />
+          
           {/* Fallback placeholder */}
           <div className="w-full h-full flex items-center justify-center hidden">
             <Camera className="w-12 h-12 text-red-400" />
@@ -381,6 +376,7 @@ const LocationCard = ({ location }: { location: typeof romeLocations[0] }) => {
                     window.open(location.lumaUrl, '_blank', 'noopener,noreferrer');
                   }
                 }}
+                title="Get directions"
               >
                 <Share2 className="w-3 h-3 text-white" />
               </Button>
@@ -396,7 +392,7 @@ const LocationCard = ({ location }: { location: typeof romeLocations[0] }) => {
             </div>
             {location.lumaUrl && (
               <div className="text-xs opacity-75">
-                Click to join →
+                Click for directions →
               </div>
             )}
           </div>
@@ -468,7 +464,7 @@ export const UnguidedTour = () => {
             </Button>
             
             <div className="bg-white/80 backdrop-blur-sm rounded-lg p-3 text-sm text-gray-700">
-              <p>🖱️ Drag to move • 📜 Scroll to zoom</p>
+              <p>🖱️ Drag to explore • 📜 Scroll to zoom • 🖱️ Click for directions</p>
             </div>
           </motion.div>
         )}
@@ -510,7 +506,7 @@ export const UnguidedTour = () => {
               className="text-center space-y-8 relative"
             >
               <motion.h1 
-                className="text-6xl md:text-8xl font-bold text-white/20 drop-shadow-lg absolute inset-0 flex items-center justify-center pointer-events-none"
+                className="text-7xl md:text-9xl lg:text-[12rem] font-bold text-white/20 drop-shadow-lg absolute inset-0 flex items-center justify-center pointer-events-none"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 0.2 }}
                 transition={{ delay: 0.2, duration: 1 }}

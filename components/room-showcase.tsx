@@ -201,6 +201,19 @@ const StackedCardsInteraction = ({
           const isSelected = selectedRoomIndex !== null && selectedRoomIndex === index
           const isCurrentCard = index === currentCardIndex
 
+          // Calculate the correct card indices for each position
+          const totalCards = cards.length
+          let cardIndex = currentCardIndex
+          
+          if (index === 1) {
+            // Left card - previous card
+            cardIndex = currentCardIndex === 0 ? totalCards - 1 : currentCardIndex - 1
+          } else if (index === 2) {
+            // Right card - next card
+            cardIndex = currentCardIndex === totalCards - 1 ? 0 : currentCardIndex + 1
+          }
+          // index === 0 is center card - uses currentCardIndex
+
           let xOffset = 0
           let rotation = 0
 
@@ -242,14 +255,14 @@ const StackedCardsInteraction = ({
             >
               <Card
                 className={isCurrentCard ? "z-10 cursor-pointer" : "z-0"}
-                image={isFirst ? cards[currentCardIndex].image : card.image}
+                image={cards[cardIndex].image}
                 isAnimating={isFirst && isContentAnimating}
               >
                 <h2 className="text-2xl font-bold text-gray-900">
-                  {isFirst ? cards[currentCardIndex].title : card.title}
+                  {cards[cardIndex].title}
                 </h2>
                 <p className="text-gray-600 text-sm">
-                  {isFirst ? cards[currentCardIndex].description : card.description}
+                  {cards[cardIndex].description}
                 </p>
               </Card>
             </motion.div>
