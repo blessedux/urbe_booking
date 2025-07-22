@@ -4,13 +4,14 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Card, CardContent } from "@/components/ui/card"
-import { Menu, User, ExternalLink, Calendar, Clock, MapPin, Download } from "lucide-react"
+import { Menu, User, ExternalLink, Calendar, Clock, MapPin, Download, Trash2 } from "lucide-react"
 import Link from "next/link"
 import { bookingStore } from "@/lib/booking-store"
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isProfileOpen, setIsProfileOpen] = useState(false)
+  const [bookings, setBookings] = useState(bookingStore.getBookings())
 
   const menuItems = [
     { name: "Urbe Village", href: "https://urbevillage.com", external: true },
@@ -21,12 +22,16 @@ export function Header() {
   // Mock user data
   const mockUser = {
     name: "Alex Chen",
-    avatar: "/images/placeholder-user.jpg",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=AlexChen",
     email: "alex.chen@example.com"
   }
 
-  // Get all bookings
-  const allBookings = bookingStore.getBookings()
+  const handleDeleteBooking = (bookingId: string) => {
+    if (confirm("Are you sure you want to delete this booking?")) {
+      bookingStore.deleteBooking(bookingId)
+      setBookings(bookingStore.getBookings()) // Refresh the list
+    }
+  }
 
   const generateCalendarEvent = (booking: any, type: 'gcal' | 'ical') => {
     const startDate = new Date(booking.date)
@@ -172,11 +177,11 @@ export function Header() {
             {/* Bookings Section */}
             <div className="mt-6">
               <h4 className="font-semibold text-gray-900 mb-3">My Bookings</h4>
-              {allBookings.length === 0 ? (
+              {bookings.length === 0 ? (
                 <p className="text-gray-500 text-sm">No bookings yet</p>
               ) : (
                 <div className="space-y-3">
-                  {allBookings.map((booking) => (
+                  {bookings.map((booking) => (
                     <Card key={booking.id} className="border border-gray-200">
                       <CardContent className="p-4">
                         <div className="flex items-start justify-between">
@@ -214,6 +219,15 @@ export function Header() {
                             >
                               <Download className="h-3 w-3 mr-1" />
                               iCal
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleDeleteBooking(booking.id)}
+                              className="h-8 px-2 text-xs text-red-600"
+                            >
+                              <Trash2 className="h-3 w-3 mr-1" />
+                              Delete
                             </Button>
                           </div>
                         </div>

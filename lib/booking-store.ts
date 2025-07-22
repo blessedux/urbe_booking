@@ -11,6 +11,15 @@ export const bookingStore = {
     return booking
   },
 
+  deleteBooking: (id: string) => {
+    const index = bookings.findIndex((booking) => booking.id === id)
+    if (index !== -1) {
+      bookings.splice(index, 1)
+      return true
+    }
+    return false
+  },
+
   getBookingById: (id: string) => {
     return bookings.find((booking) => booking.id === id)
   },

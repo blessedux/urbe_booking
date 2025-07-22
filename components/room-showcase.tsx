@@ -151,7 +151,7 @@ const StackedCardsInteraction = ({
                 y: isSelected ? -50 : 0,
                 opacity: 1,
                 scale: isSelected ? 0.9 : 1,
-                filter: isSelected ? "blur(1px)" : "blur(0px)",
+                filter: isSelected ? "blur(1px)" : (selectedRoomIndex !== null ? "blur(2px)" : "blur(0px)"),
                 zIndex: isSelected ? 20 : (isFirst ? 10 : 0),
               }}
               transition={{
