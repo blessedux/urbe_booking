@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { RoomCard } from "@/components/room-card"
 import { Calendar } from "@/components/ui/calendar"
@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
 
-export default function BookingPage() {
+function BookingContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [selectedDate, setSelectedDate] = useState<Date>()
@@ -38,7 +38,7 @@ export default function BookingPage() {
   }
 
   return (
-          <div className="min-h-screen bg-cover bg-center bg-no-repeat" style={{ backgroundImage: 'url(/images/background1.png)' }}>
+    <div className="min-h-screen bg-cover bg-center bg-no-repeat" style={{ backgroundImage: 'url(/images/background1.png)' }}>
       <div className="container mx-auto px-4 py-6">
         {/* Header */}
         <div className="flex items-center gap-4 mb-6">
@@ -81,5 +81,20 @@ export default function BookingPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function BookingPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center" style={{ backgroundImage: 'url(/images/background1.png)' }}>
+        <div className="text-white text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+          <p>Loading booking page...</p>
+        </div>
+      </div>
+    }>
+      <BookingContent />
+    </Suspense>
   )
 }

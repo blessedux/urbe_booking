@@ -66,12 +66,24 @@ const StackedCardsInteraction = ({
   onPreviousCard: () => void
   onNextCard: () => void
 }) => {
-  const [isHovering, setIsHovering] = useState(false)
+  const [isAnimating, setIsAnimating] = useState(false)
   const [touchStart, setTouchStart] = useState<number | null>(null)
   const [touchEnd, setTouchEnd] = useState<number | null>(null)
 
   // Minimum swipe distance (in px)
   const minSwipeDistance = 50
+
+  // Auto-animation timer - trigger once after 1.5s on page load
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (selectedRoomIndex === null) {
+        setIsAnimating(true)
+        // Don't reset isAnimating back to false - keep cards spread out
+      }
+    }, 1500) // Trigger once after 1.5 seconds
+
+    return () => clearTimeout(timer)
+  }, [selectedRoomIndex])
 
   const onTouchStart = (e: React.TouchEvent) => {
     setTouchEnd(null)
@@ -131,26 +143,24 @@ const StackedCardsInteraction = ({
           return (
             <motion.div
               key={index}
-              className={cn("absolute", isCurrentCard ? "z-10" : "z-0")}
+              className={cn("absolute", isFirst ? "z-10" : "z-0")}
               initial={{ x: 0, rotate: 0, y: 0, opacity: 1, scale: 1, filter: "blur(0px)" }}
               animate={{
-                x: isHovering && !isSelected && isCurrentCard ? xOffset : 0,
-                rotate: isHovering && !isSelected && isCurrentCard ? rotation : 0,
+                x: isAnimating && !isSelected ? xOffset : 0,
+                rotate: isAnimating && !isSelected ? rotation : 0,
                 y: isSelected ? -50 : 0,
-                opacity: 1, // Complete fade out on confirmation
-                scale: isSelected ? 0.9 : 1, // 10% smaller when selected
-                filter: isSelected ? "blur(1px)" : "blur(0px)", // 10% blur when selected
-                zIndex: isSelected ? 20 : (isCurrentCard ? 10 : 0),
+                opacity: 1,
+                scale: isSelected ? 0.9 : 1,
+                filter: isSelected ? "blur(1px)" : "blur(0px)",
+                zIndex: isSelected ? 20 : (isFirst ? 10 : 0),
               }}
               transition={{
-                duration: 0.3, // Faster fade out
+                duration: 0.3,
                 ease: "easeInOut",
-                delay: index * animationDelay, // No delay on fade out
+                delay: index * animationDelay,
                 type: "spring",
               }}
               {...(isCurrentCard && {
-                onHoverStart: () => !isSelected && setIsHovering(true),
-                onHoverEnd: () => !isSelected && setIsHovering(false),
                 onClick: () => !isSelected && onCardClick?.(index),
               })}
             >
