@@ -15,6 +15,7 @@ export function Header() {
 
   const menuItems = [
     { name: "Urbe Village", href: "https://urbevillage.com", external: true },
+    { name: "City Tours", href: "/city-tours", external: false },
     { name: "ETH Rome", href: "https://ethrome.com", external: true },
     { name: "Hackathon", href: "https://ethrome.com/hackathon", external: true },
   ]
@@ -33,7 +34,7 @@ export function Header() {
     }
   }
 
-  const generateCalendarEvent = (booking: any, type: 'gcal' | 'ical') => {
+  const generateCalendarEvent = (booking: { id: string; date: string; timeSlot?: string; duration?: string; roomName: string }, type: 'gcal' | 'ical') => {
     const startDate = new Date(booking.date)
     const endDate = new Date(booking.date)
     
@@ -90,7 +91,7 @@ export function Header() {
     }
   }
 
-  const handleCalendarDownload = (booking: any, type: 'gcal' | 'ical') => {
+  const handleCalendarDownload = (booking: { id: string; date: string; timeSlot?: string; duration?: string; roomName: string }, type: 'gcal' | 'ical') => {
     if (type === 'gcal') {
       const url = generateCalendarEvent(booking, 'gcal')
       window.open(url, '_blank')
@@ -168,10 +169,15 @@ export function Header() {
                 alt={mockUser.name}
                 className="w-12 h-12 rounded-full object-cover"
               />
-              <div>
+              <div className="flex-1">
                 <h3 className="font-semibold text-gray-900">{mockUser.name}</h3>
                 <p className="text-sm text-gray-600">{mockUser.email}</p>
               </div>
+              <Link href="/profile">
+                <Button variant="outline" size="sm" onClick={() => setIsProfileOpen(false)}>
+                  View Profile
+                </Button>
+              </Link>
             </div>
 
             {/* Bookings Section */}

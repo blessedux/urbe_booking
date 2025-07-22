@@ -74,7 +74,7 @@ export function UnguidedCityTour() {
                     POAP Collection at Events
                   </h3>
                   <p className="text-gray-700 leading-relaxed mb-4">
-                    Don't miss out on POAPs during the conference! Tap your phone on NFC stickers at various IRL events to collect additional tokens.
+                    Don&apos;t miss out on POAPs during the conference! Tap your phone on NFC stickers at various IRL events to collect additional tokens.
                   </p>
                   <ul className="space-y-2 text-gray-700">
                     <li className="flex items-center gap-2">

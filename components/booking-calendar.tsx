@@ -89,7 +89,7 @@ export function BookingCalendar({ selectedRoomIndex, onBack, onBookingComplete }
         <div className="bg-white/90 backdrop-blur-md rounded-lg shadow-xl border border-white/20">
           <div className="p-4 border-b">
             <h3 className="text-lg font-semibold text-gray-900">{room.name}</h3>
-            <p className="text-gray-600 text-sm">Choose when you'd like to book this space</p>
+            <p className="text-gray-600 text-sm">Choose when you&apos;d like to book this space</p>
           </div>
           <div className="p-4" style={{ minHeight: '256px' }}>
             <Calendar
