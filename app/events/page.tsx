@@ -492,7 +492,7 @@ export default function EventsPage() {
       const deltaX = touch.clientX - centerX
       
       // Calculate rotation based on touch position (opposite direction)
-      const maxRotation = 15 // Maximum rotation in degrees
+      const maxRotation = 8 // Reduced maximum rotation in degrees
       const rotationAmount = -(deltaX / centerX) * maxRotation
       setRotation(rotationAmount)
     }

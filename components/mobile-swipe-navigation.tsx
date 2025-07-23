@@ -26,7 +26,7 @@ export function MobileSwipeNavigation({ children }: MobileSwipeNavigationProps) 
 
   // Calculate motion blur based on drag distance
   const getMotionBlur = () => {
-    if (!isDragging || !isMobile) return 0
+    if (!isDragging || !isMobile || !isSwipeDirectionFunctional()) return 0
     
     const deltaX = Math.abs(dragStartX - dragCurrentX)
     const maxBlur = 8 // Maximum blur in pixels
@@ -38,19 +38,72 @@ export function MobileSwipeNavigation({ children }: MobileSwipeNavigationProps) 
     return blurIntensity
   }
 
-  // Calculate blur direction based on swipe direction
-  const getBlurDirection = () => {
-    if (!isDragging || !isMobile) return 0
+  // Calculate content slide direction based on swipe direction
+  const getContentSlide = () => {
+    if (!isDragging || !isMobile || !isSwipeDirectionFunctional()) return 0
     
     const deltaX = dragStartX - dragCurrentX
-    const blurAmount = getMotionBlur()
+    const slideIntensity = Math.min(Math.abs(deltaX) / 400, 0.15) // Reduced max slide to 15%
     
-    // If swiping left (deltaX > 0), distortion should go right (positive) - same direction
-    // If swiping right (deltaX < 0), distortion should go left (negative) - same direction
-    return deltaX > 0 ? blurAmount : -blurAmount
+    // If swiping left to right (deltaX > 0), content should slide left (negative)
+    // If swiping right to left (deltaX < 0), content should slide right (positive)
+    return deltaX > 0 ? -slideIntensity : slideIntensity
   }
 
+  // Calculate skew direction for motion blur effect
+  const getSkewDirection = () => {
+    if (!isDragging || !isMobile || !isSwipeDirectionFunctional()) return 0
+    
+    const deltaX = dragStartX - dragCurrentX
+    const skewIntensity = Math.min(Math.abs(deltaX) / 800, 0.05) // Reduced max skew to 5%
+    
+    // Skew in the same direction as swipe for opposite motion blur effect
+    return deltaX > 0 ? skewIntensity : -skewIntensity
+  }
 
+  // Calculate opacity for fade effect
+  const getOpacity = () => {
+    if (!isDragging || !isMobile || !isSwipeDirectionFunctional()) return 1
+    
+    const deltaX = Math.abs(dragStartX - dragCurrentX)
+    const fadeThreshold = 30 // Start fading after 30px
+    const maxFade = 0.3 // Minimum opacity (70% fade out)
+    
+    if (deltaX < fadeThreshold) return 1
+    
+    const fadeIntensity = Math.min((deltaX - fadeThreshold) / 100, 1) * (1 - maxFade)
+    return 1 - fadeIntensity
+  }
+
+  // Check if current swipe direction is functional for the current page
+  const isSwipeDirectionFunctional = () => {
+    if (!isDragging || !isMobile) return false
+    
+    const deltaX = dragStartX - dragCurrentX
+    const currentPath = window.location.pathname
+    
+    if (deltaX > 0) {
+      // Swiping left to right
+      if (currentPath === '/profile') {
+        return false // No navigation on profile page for left to right
+      } else if (currentPath === '/') {
+        return true // Can go to profile
+      } else if (currentPath === '/events') {
+        return true // Can go to home
+      }
+    } else {
+      // Swiping right to left
+      if (currentPath === '/events') {
+        return false // No navigation on events page for right to left
+      } else if (currentPath === '/') {
+        return true // Can go to events
+      } else if (currentPath === '/profile') {
+        return true // Can go to home
+      }
+    }
+    
+    return false
+  }
 
   const handleTouchStart = (e: TouchEvent) => {
     if (!isMobile) {
@@ -149,6 +202,12 @@ export function MobileSwipeNavigation({ children }: MobileSwipeNavigationProps) 
     }
   }, [isMobile, isDragging, dragStartX, dragStartY, dragCurrentX, dragCurrentY])
 
+  // Calculate transform values
+  const slideX = getContentSlide() * 100 // Convert to percentage
+  const skewX = getSkewDirection() * 100 // Convert to degrees
+  const blurAmount = getMotionBlur()
+  const opacity = getOpacity()
+
   return (
     <div 
       ref={containerRef}
@@ -161,14 +220,52 @@ export function MobileSwipeNavigation({ children }: MobileSwipeNavigationProps) 
     >
       <div
         style={{
-          filter: `blur(${getMotionBlur()}px)`,
-          transition: isDragging ? 'none' : 'filter 0.3s ease-out',
-          transform: isDragging ? `translateX(${(dragCurrentX - dragStartX) * 0.1}px) skewX(${getBlurDirection() * 0.5}deg)` : 'translateX(0) skewX(0deg)',
-          transitionProperty: isDragging ? 'none' : 'filter, transform'
+          filter: `blur(${blurAmount}px)`,
+          opacity: opacity,
+          transform: isDragging 
+            ? `translateX(${slideX}%) skewX(${skewX}deg)` 
+            : 'translateX(0%) skewX(0deg)',
+          transition: isDragging 
+            ? 'none' 
+            : 'filter 0.3s ease-out, transform 0.3s ease-out, opacity 0.3s ease-out',
+          willChange: isDragging ? 'transform, filter, opacity' : 'auto'
         }}
       >
         {children}
       </div>
+      
+      {/* Swipe Hint Overlay */}
+      {isMobile && showSwipeHint && (() => {
+        const currentPath = window.location.pathname
+        const isSwipingLeftToRight = dragStartX > dragCurrentX
+        
+        let hintText = ''
+        if (isSwipingLeftToRight) {
+          if (currentPath === '/profile') {
+            hintText = '← Home'
+          } else if (currentPath === '/') {
+            hintText = '← Profile'
+          } else if (currentPath === '/events') {
+            hintText = '← Home'
+          }
+        } else {
+          if (currentPath === '/events') {
+            hintText = 'Home →'
+          } else if (currentPath === '/') {
+            hintText = 'Events →'
+          } else if (currentPath === '/profile') {
+            hintText = 'Home →'
+          }
+        }
+        
+        return (
+          <div className="fixed inset-0 pointer-events-none z-50 flex items-center justify-center">
+            <div className="bg-black/20 backdrop-blur-sm rounded-full px-6 py-3 text-white text-sm font-medium animate-pulse">
+              {hintText}
+            </div>
+          </div>
+        )
+      })()}
     </div>
   )
 } 
