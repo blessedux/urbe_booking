@@ -1,6 +1,8 @@
 "use client"
 
 import { Header } from '@/components/header'
+import { PageTransition } from '@/components/page-transition'
+import { MobileSwipeNavigation } from '@/components/mobile-swipe-navigation'
 import { Star, MessageCircle, UserPlus } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -17,7 +19,7 @@ type ProfileCardProps = {
 export default function ProfilePage() {
   const limoneProfile: ProfileCardProps = {
     name: "limone.eth",
-    role: "Web3 Developer & Blockchain Enthusiast",
+    role: "cofounder & product @builders_garden  | hosting a web3 hub in rome @urbeEth @ETHRome 🇮🇹🐺",
     status: "online",
     avatar: "/images/limoneT_eth.jpg",
     tags: ["Premium", "Verified"],
@@ -26,42 +28,38 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="relative min-h-screen">
-      {/* Background - same as homepage */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: 'url(/images/background1.png)' }}
-      />
-      
-      {/* Animated Grid Background */}
-      <div className="absolute inset-0 opacity-20">
-        <div
-          className="absolute inset-0 bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-600 to-transparent"
-          style={{
-            backgroundImage: `
-              linear-gradient(rgba(156, 163, 175, 0.3) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(156, 163, 175, 0.3) 1px, transparent 1px)
-            `,
-            backgroundSize: "40px 40px",
-            animation: "gridMove 20s linear infinite",
-          }}
-        />
-      </div>
-      
-      <Header />
-      
-      {/* Centered Profile Card */}
-      <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
-        <ProfileCard {...limoneProfile} />
-      </div>
+    <MobileSwipeNavigation>
+      <PageTransition>
+        {/* Animated Grid Background */}
+        <div className="absolute inset-0 opacity-20">
+          <div
+            className="absolute inset-0 bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-600 to-transparent"
+            style={{
+              backgroundImage: `
+                linear-gradient(rgba(156, 163, 175, 0.3) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(156, 163, 175, 0.3) 1px, transparent 1px)
+              `,
+              backgroundSize: "40px 40px",
+              animation: "gridMove 20s linear infinite",
+            }}
+          />
+        </div>
+        
+        <Header />
+        
+        {/* Centered Profile Card */}
+        <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
+          <ProfileCard {...limoneProfile} />
+        </div>
 
-      <style jsx>{`
-        @keyframes gridMove {
-          0% { transform: translate(0, 0); }
-          100% { transform: translate(40px, 40px); }
-        }
-      `}</style>
-    </div>
+        <style jsx>{`
+          @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(40px, 40px); }
+          }
+        `}</style>
+      </PageTransition>
+    </MobileSwipeNavigation>
   )
 }
 
@@ -128,6 +126,16 @@ function ProfileCard({ name, role, status, avatar, tags = [], isVerified, follow
         <p className="mt-1 text-sm text-white/80 transition-colors duration-300 group-hover:text-white/90">
           {role}
         </p>
+
+        {/* Website Link */}
+        <a 
+          href="https://www.limone.lol/" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="mt-2 inline-block text-xs text-blue-300 hover:text-blue-200 transition-colors duration-300 underline decoration-blue-300/50 hover:decoration-blue-200"
+        >
+          limone.lol
+        </a>
 
         {followers && (
           <p className="mt-2 text-xs text-white/60 transition-all duration-300 group-hover:text-blue-300 group-hover:font-medium">

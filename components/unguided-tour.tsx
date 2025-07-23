@@ -23,6 +23,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DotLoader } from "@/components/ui/dot-loader";
 import { Header } from "@/components/header";
+import { PageTransition } from "@/components/page-transition";
+import { MobileSwipeNavigation } from "@/components/mobile-swipe-navigation";
 
 
 //Types
@@ -434,106 +436,102 @@ export const UnguidedTour = () => {
   }, []);
 
   return (
-    <div className="relative min-h-screen">
-      {/* Background - same as homepage */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: 'url(/images/background1.png)' }}
-      />
-      
-      {/* Header */}
-      <Header />
-      
-      {/* Controls */}
-      <AnimatePresence>
-        {showControls && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.5 }}
-            className="absolute top-20 left-4 z-50 flex gap-2"
-          >
-            <Button
-              variant="ghost"
-              className="bg-white/80 hover:bg-white text-gray-900 backdrop-blur-sm"
-              onClick={() => window.history.back()}
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back
-            </Button>
-            
-            <div className="bg-white/80 backdrop-blur-sm rounded-lg p-3 text-sm text-gray-700">
-              <p>🖱️ Drag to explore • 📜 Scroll to zoom • 🖱️ Click for directions</p>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Main Content */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: isLoading ? 0 : 1 }}
-        transition={{ duration: 0.8, delay: 0.5 }}
-        className="relative z-10 h-screen w-screen pt-16"
-      >
-        <DraggableContainer variant={selectedVariant}>
-          <GridBody>
-            {romeLocations.map((location) => (
-              <GridItem key={location.id} className="relative aspect-square w-48 md:w-64">
-                <LocationCard location={location} />
-              </GridItem>
-            ))}
-          </GridBody>
-        </DraggableContainer>
-      </motion.div>
-
-      {/* Loading State */}
-      <AnimatePresence>
-        {isLoading && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm"
-          >
+    <MobileSwipeNavigation>
+      <PageTransition>
+        {/* Header */}
+        <Header />
+        
+        {/* Controls */}
+        <AnimatePresence>
+          {showControls && (
             <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 1.2, opacity: 0 }}
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.5 }}
-              className="text-center space-y-8 relative"
+              className="absolute top-20 left-4 z-50 flex gap-2"
             >
-              <motion.h1 
-                className="text-7xl md:text-9xl lg:text-[12rem] font-bold text-white/20 drop-shadow-lg absolute inset-0 flex items-center justify-center pointer-events-none"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 0.2 }}
-                transition={{ delay: 0.2, duration: 1 }}
+              <Button
+                variant="ghost"
+                className="bg-white/80 hover:bg-white text-gray-900 backdrop-blur-sm"
+                onClick={() => window.history.back()}
               >
-                Unguided Tours
-              </motion.h1>
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back
+              </Button>
               
-              <motion.div 
-                className="flex flex-col items-center space-y-4"
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -20, opacity: 0 }}
-                transition={{ delay: 0.6, duration: 0.6 }}
+              <div className="bg-white/80 backdrop-blur-sm rounded-lg p-3 text-sm text-gray-700">
+                <p>🖱️ Drag to explore • 📜 Scroll to zoom • 🖱️ Click for directions</p>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Main Content */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: isLoading ? 0 : 1 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
+          className="relative z-10 h-screen w-screen pt-16"
+        >
+          <DraggableContainer variant={selectedVariant}>
+            <GridBody>
+              {romeLocations.map((location) => (
+                <GridItem key={location.id} className="relative aspect-square w-48 md:w-64">
+                  <LocationCard location={location} />
+                </GridItem>
+              ))}
+            </GridBody>
+          </DraggableContainer>
+        </motion.div>
+
+        {/* Loading State */}
+        <AnimatePresence>
+          {isLoading && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm"
+            >
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 1.2, opacity: 0 }}
+                transition={{ duration: 0.5 }}
+                className="text-center space-y-8 relative"
               >
-                <DotLoader
-                  frames={loaderFrames}
-                  dotClassName="bg-white/15 [&.dot-loader-active]:bg-white size-1.5 transition-all duration-200"
-                  duration={200}
-                  className="scale-150 gap-0.5"
-                  isPlaying={!loaderComplete}
-                  onComplete={handleLoadingComplete}
-                />
+                <motion.h1 
+                  className="text-7xl md:text-9xl lg:text-[12rem] font-bold text-white/20 drop-shadow-lg absolute inset-0 flex items-center justify-center pointer-events-none"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.2 }}
+                  transition={{ delay: 0.2, duration: 1 }}
+                >
+                  Unguided Tours
+                </motion.h1>
+                
+                <motion.div 
+                  className="flex flex-col items-center space-y-4"
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: -20, opacity: 0 }}
+                  transition={{ delay: 0.6, duration: 0.6 }}
+                >
+                  <DotLoader
+                    frames={loaderFrames}
+                    dotClassName="bg-white/15 [&.dot-loader-active]:bg-white size-1.5 transition-all duration-200"
+                    duration={200}
+                    className="scale-150 gap-0.5"
+                    isPlaying={!loaderComplete}
+                    onComplete={handleLoadingComplete}
+                  />
+                </motion.div>
               </motion.div>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+          )}
+        </AnimatePresence>
+      </PageTransition>
+    </MobileSwipeNavigation>
   );
 }; 

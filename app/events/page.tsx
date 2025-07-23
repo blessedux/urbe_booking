@@ -4,6 +4,8 @@ import { Ref, forwardRef, useState, useEffect } from "react";
 import Image, { ImageProps } from "next/image";
 import { motion, useMotionValue, AnimatePresence, useTransform, useSpring } from "framer-motion";
 import { Header } from "@/components/header";
+import { PageTransition } from "@/components/page-transition";
+import { MobileSwipeNavigation } from "@/components/mobile-swipe-navigation";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -165,7 +167,7 @@ const AnimatedTooltip = ({
   };
 
   return (
-    <div className={cn("flex items-center gap-2", className)}>
+    <div className={cn("flex items-center justify-center gap-2", className)}>
       {items.map((item) => (
         <div
           className="-mr-4 relative group"
@@ -499,28 +501,24 @@ export default function EventsPage() {
   ];
 
   return (
-    <div className="relative min-h-screen">
-      {/* Background - same as homepage */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: 'url(/images/background1.png)' }}
-      />
-      
-      <Header />
-      
-      <main className="relative z-10 overflow-hidden">  
-        <PhotoGallery />
+    <MobileSwipeNavigation>
+      <PageTransition>
+        <Header />
         
-        {/* Animated Tooltip Section */}
-        <div className="flex justify-center items-center py-16">
-          <div className="text-center">
-            <h4 className="text-white text-lg mb-8 font-medium">
-              Meet Our Event Organizers
-            </h4>
-            <AnimatedTooltip items={eventOrganizers} />
+        <main className="relative z-10 overflow-hidden">  
+          <PhotoGallery />
+          
+          {/* Animated Tooltip Section */}
+          <div className="flex justify-center items-center py-16">
+            <div className="text-center">
+              <h4 className="text-white text-lg mb-8 font-medium">
+                Organizers
+              </h4>
+              <AnimatedTooltip items={eventOrganizers} />
+            </div>
           </div>
-        </div>
-      </main>
-    </div>
+        </main>
+      </PageTransition>
+    </MobileSwipeNavigation>
   );
 } 

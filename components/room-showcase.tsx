@@ -21,7 +21,7 @@ const Card = ({
   return (
     <div
       className={cn(
-        "w-[350px] cursor-pointer h-[400px] overflow-hidden bg-white/90 backdrop-blur-md rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.1)] select-none",
+        "w-[315px] md:w-[350px] cursor-pointer h-[420px] md:h-[400px] overflow-hidden bg-white/90 backdrop-blur-md rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.1)] select-none",
         className
       )}
       style={{ userSelect: 'none', WebkitUserSelect: 'none' }}
@@ -116,23 +116,43 @@ const StackedCardsInteraction = ({
     console.log("Drag start triggered")
     if (selectedRoomIndex !== null) return // Don't allow dragging when calendar is open
     
-    setIsDragging(true)
+    // Only stop propagation if we're actually going to handle this drag
+    // This allows global swipe navigation to work when swiping outside the cards
+    const rect = e.currentTarget.getBoundingClientRect()
     const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
-    setDragStartX(clientX)
-    setDragCurrentX(clientX)
-    setDragOffset(0)
+    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY
+    
+    // Check if the touch is within the cards area
+    const isWithinCardsArea = clientX >= rect.left && clientX <= rect.right && 
+                             clientY >= rect.top && clientY <= rect.bottom
+    
+    if (isWithinCardsArea) {
+      e.stopPropagation()
+      setIsDragging(true)
+      setDragStartX(clientX)
+      setDragCurrentX(clientX)
+      setDragOffset(0)
+    }
   }
 
   const handleDragMove = (e: React.TouchEvent | React.MouseEvent) => {
     if (!isDragging || selectedRoomIndex !== null) return
+    
+    // Only stop propagation if we're actually dragging
+    e.stopPropagation()
     
     const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
     setDragCurrentX(clientX)
     setDragOffset(dragStartX - clientX)
   }
 
-  const handleDragEnd = () => {
+  const handleDragEnd = (e?: React.TouchEvent | React.MouseEvent) => {
     if (!isDragging || selectedRoomIndex !== null) return
+    
+    // Only stop propagation if we're actually dragging
+    if (e) {
+      e.stopPropagation()
+    }
     
     setIsDragging(false)
     
@@ -193,9 +213,9 @@ const StackedCardsInteraction = ({
         onMouseDown={handleDragStart}
         onMouseMove={handleDragMove}
         onMouseUp={handleDragEnd}
-        onMouseLeave={handleDragEnd}
+        onMouseLeave={() => handleDragEnd()}
       >
-        <div className="relative w-[350px] h-[400px]">
+        <div className="relative w-[315px] md:w-[350px] h-[420px] md:h-[400px]">
         {limitedCards.map((card, index) => {
           const isFirst = index === 0
           const isSelected = selectedRoomIndex !== null && selectedRoomIndex === index
@@ -348,7 +368,7 @@ export function RoomBooking() {
   const selectedRoom = selectedRoomIndex !== null ? ROOMS[selectedRoomIndex] : null
 
   return (
-    <section className="min-h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center" style={{ backgroundImage: 'url(/images/background1.png)' }}>
+    <section className="min-h-screen flex items-center justify-center">
       <div className="container mx-auto px-4">
         {/* Gallery and Calendar Container */}
         <div className="relative max-w-6xl mx-auto">

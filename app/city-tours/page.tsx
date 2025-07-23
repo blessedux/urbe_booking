@@ -9,6 +9,8 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { MapPin, Clock, Users, Star, Camera, Heart, Share2 } from 'lucide-react'
 import { Preloader } from '@/components/preloader'
+import { PageTransition } from '@/components/page-transition'
+import { MobileSwipeNavigation } from '@/components/mobile-swipe-navigation'
 
 // Animation frames for the dot loader - Pong game
 const loaderFrames = [
@@ -162,7 +164,7 @@ export default function CityToursPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-red-50 to-orange-50 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center space-y-8">
           <div className="space-y-4">
             <h1 className="text-4xl font-bold text-gray-900">Discover Rome</h1>
@@ -194,7 +196,7 @@ export default function CityToursPage() {
         }}
         loadingDuration={2000}
       >
-        <div className="min-h-screen bg-gradient-to-br from-red-50 to-orange-50">
+        <div className="min-h-screen">
           <Header />
           <div className="pt-20 pb-12 px-4">
             <div className="container mx-auto max-w-7xl">
@@ -210,172 +212,174 @@ export default function CityToursPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 to-orange-50">
-      <Header />
-      
-      <div className="pt-20 pb-12 px-4">
-        <div className="container mx-auto max-w-7xl">
-          {/* Page Header */}
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Discover Rome
-            </h1>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
-              Experience the Eternal City through our carefully curated guided tours. 
-              From ancient wonders to hidden gems, let our expert guides show you the real Rome.
-            </p>
-            
-            {/* Unguided Tour CTA */}
-            <div className="bg-gradient-to-r from-red-500 to-orange-500 rounded-2xl p-8 text-white mb-8">
-              <h2 className="text-2xl font-bold mb-4">Want to Explore on Your Own?</h2>
-              <p className="text-lg mb-6 opacity-90">
-                Discover Rome at your own pace with our interactive unguided tour experience.
+    <MobileSwipeNavigation>
+      <PageTransition>
+        <Header />
+        
+        <div className="pt-20 pb-12 px-4">
+          <div className="container mx-auto max-w-7xl">
+            {/* Page Header */}
+            <div className="text-center mb-12">
+              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                Discover Rome
+              </h1>
+              <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
+                Experience the Eternal City through our carefully curated guided tours. 
+                From ancient wonders to hidden gems, let our expert guides show you the real Rome.
               </p>
-              <Button 
-                size="lg" 
-                variant="secondary"
-                className="bg-white text-red-600 hover:bg-gray-100"
-                onClick={() => setShowUnguidedTour(true)}
-              >
-                Start Unguided Tour
-              </Button>
-            </div>
-          </div>
-
-          {/* Category Filter */}
-          <div className="flex flex-wrap justify-center gap-3 mb-8">
-            {categories.map((category) => (
-              <Button
-                key={category.id}
-                variant={selectedCategory === category.id ? "default" : "outline"}
-                onClick={() => setSelectedCategory(category.id)}
-                className="rounded-full"
-              >
-                {category.name}
-              </Button>
-            ))}
-          </div>
-
-          {/* Tours Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredTours.map((tour) => (
-              <Card key={tour.id} className="group hover:shadow-xl transition-all duration-300 overflow-hidden">
-                <div className="relative">
-                  <div className="w-full h-48 bg-gradient-to-br from-red-100 to-orange-100 flex items-center justify-center">
-                    <Camera className="w-16 h-16 text-red-400" />
-                  </div>
-                  
-                  {/* Favorite Button */}
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="absolute top-2 right-2 bg-white/80 hover:bg-white"
-                    onClick={() => toggleFavorite(tour.id)}
-                  >
-                    <Heart 
-                      className={`w-5 h-5 ${
-                        favorites.includes(tour.id) 
-                          ? 'fill-red-500 text-red-500' 
-                          : 'text-gray-600'
-                      }`} 
-                    />
-                  </Button>
-
-                  {/* Share Button */}
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="absolute top-2 right-12 bg-white/80 hover:bg-white"
-                  >
-                    <Share2 className="w-5 h-5 text-gray-600" />
-                  </Button>
-
-                  {/* Category Badge */}
-                  <Badge className="absolute bottom-2 left-2 bg-red-500 text-white">
-                    {tour.category}
-                  </Badge>
-                </div>
-
-                <CardHeader className="pb-3">
-                  <div className="flex items-start justify-between">
-                    <CardTitle className="text-xl group-hover:text-red-600 transition-colors">
-                      {tour.name}
-                    </CardTitle>
-                    <div className="text-right">
-                      <div className="text-2xl font-bold text-red-600">{tour.price}</div>
-                      <div className="text-sm text-gray-500">per person</div>
-                    </div>
-                  </div>
-                  
-                  <p className="text-gray-600 text-sm leading-relaxed">
-                    {tour.description}
-                  </p>
-                </CardHeader>
-
-                <CardContent className="space-y-4">
-                  {/* Tour Details */}
-                  <div className="grid grid-cols-2 gap-3 text-sm">
-                    <div className="flex items-center gap-2">
-                      <Clock className="w-4 h-4 text-gray-400" />
-                      <span>{tour.duration}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Users className="w-4 h-4 text-gray-400" />
-                      <span>{tour.groupSize}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <MapPin className="w-4 h-4 text-gray-400" />
-                      <span>{tour.language}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Star className="w-4 h-4 text-yellow-400" />
-                      <span>{tour.rating} ({tour.reviews})</span>
-                    </div>
-                  </div>
-
-                  {/* Highlights */}
-                  <div>
-                    <h4 className="font-semibold text-sm text-gray-900 mb-2">Highlights:</h4>
-                    <div className="flex flex-wrap gap-1">
-                      {tour.highlights.map((highlight, index) => (
-                        <Badge key={index} variant="secondary" className="text-xs">
-                          {highlight}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Action Buttons */}
-                  <div className="flex gap-2 pt-2">
-                    <Button className="flex-1 bg-red-600 hover:bg-red-700">
-                      Book Now
-                    </Button>
-                    <Button variant="outline" className="flex-1">
-                      Learn More
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-
-          {/* Empty State */}
-          {filteredTours.length === 0 && (
-            <div className="text-center py-12">
-              <div className="w-16 h-16 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                <MapPin className="w-8 h-8 text-gray-400" />
+              
+              {/* Unguided Tour CTA */}
+              <div className="bg-gradient-to-r from-red-500 to-orange-500 rounded-2xl p-8 text-white mb-8">
+                <h2 className="text-2xl font-bold mb-4">Want to Explore on Your Own?</h2>
+                <p className="text-lg mb-6 opacity-90">
+                  Discover Rome at your own pace with our interactive unguided tour experience.
+                </p>
+                <Button 
+                  size="lg" 
+                  variant="secondary"
+                  className="bg-white text-red-600 hover:bg-gray-100"
+                  onClick={() => setShowUnguidedTour(true)}
+                >
+                  Start Unguided Tour
+                </Button>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">No tours found</h3>
-              <p className="text-gray-600 mb-4">Try selecting a different category</p>
-              <Button onClick={() => setSelectedCategory('all')}>
-                View All Tours
-              </Button>
             </div>
-          )}
-        </div>
-      </div>
 
-      <Footer />
-    </div>
+            {/* Category Filter */}
+            <div className="flex flex-wrap justify-center gap-3 mb-8">
+              {categories.map((category) => (
+                <Button
+                  key={category.id}
+                  variant={selectedCategory === category.id ? "default" : "outline"}
+                  onClick={() => setSelectedCategory(category.id)}
+                  className="rounded-full"
+                >
+                  {category.name}
+                </Button>
+              ))}
+            </div>
+
+            {/* Tours Grid */}
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredTours.map((tour) => (
+                <Card key={tour.id} className="group hover:shadow-xl transition-all duration-300 overflow-hidden">
+                  <div className="relative">
+                    <div className="w-full h-48 bg-gradient-to-br from-red-100 to-orange-100 flex items-center justify-center">
+                      <Camera className="w-16 h-16 text-red-400" />
+                    </div>
+                    
+                    {/* Favorite Button */}
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="absolute top-2 right-2 bg-white/80 hover:bg-white"
+                      onClick={() => toggleFavorite(tour.id)}
+                    >
+                      <Heart 
+                        className={`w-5 h-5 ${
+                          favorites.includes(tour.id) 
+                            ? 'fill-red-500 text-red-500' 
+                            : 'text-gray-600'
+                        }`} 
+                      />
+                    </Button>
+
+                    {/* Share Button */}
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="absolute top-2 right-12 bg-white/80 hover:bg-white"
+                    >
+                      <Share2 className="w-5 h-5 text-gray-600" />
+                    </Button>
+
+                    {/* Category Badge */}
+                    <Badge className="absolute bottom-2 left-2 bg-red-500 text-white">
+                      {tour.category}
+                    </Badge>
+                  </div>
+
+                  <CardHeader className="pb-3">
+                    <div className="flex items-start justify-between">
+                      <CardTitle className="text-xl group-hover:text-red-600 transition-colors">
+                        {tour.name}
+                      </CardTitle>
+                      <div className="text-right">
+                        <div className="text-2xl font-bold text-red-600">{tour.price}</div>
+                        <div className="text-sm text-gray-500">per person</div>
+                      </div>
+                    </div>
+                    
+                    <p className="text-gray-600 text-sm leading-relaxed">
+                      {tour.description}
+                    </p>
+                  </CardHeader>
+
+                  <CardContent className="space-y-4">
+                    {/* Tour Details */}
+                    <div className="grid grid-cols-2 gap-3 text-sm">
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-4 h-4 text-gray-400" />
+                        <span>{tour.duration}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Users className="w-4 h-4 text-gray-400" />
+                        <span>{tour.groupSize}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <MapPin className="w-4 h-4 text-gray-400" />
+                        <span>{tour.language}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Star className="w-4 h-4 text-yellow-400" />
+                        <span>{tour.rating} ({tour.reviews})</span>
+                      </div>
+                    </div>
+
+                    {/* Highlights */}
+                    <div>
+                      <h4 className="font-semibold text-sm text-gray-900 mb-2">Highlights:</h4>
+                      <div className="flex flex-wrap gap-1">
+                        {tour.highlights.map((highlight, index) => (
+                          <Badge key={index} variant="secondary" className="text-xs">
+                            {highlight}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex gap-2 pt-2">
+                      <Button className="flex-1 bg-red-600 hover:bg-red-700">
+                        Book Now
+                      </Button>
+                      <Button variant="outline" className="flex-1">
+                        Learn More
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {/* Empty State */}
+            {filteredTours.length === 0 && (
+              <div className="text-center py-12">
+                <div className="w-16 h-16 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                  <MapPin className="w-8 h-8 text-gray-400" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">No tours found</h3>
+                <p className="text-gray-600 mb-4">Try selecting a different category</p>
+                <Button onClick={() => setSelectedCategory('all')}>
+                  View All Tours
+                </Button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <Footer />
+      </PageTransition>
+    </MobileSwipeNavigation>
   )
 } 
