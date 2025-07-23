@@ -105,27 +105,12 @@ export function MobileSwipeNavigation({ children }: MobileSwipeNavigationProps) 
   }
 
   const handleTouchStart = (e: TouchEvent) => {
-    if (!isMobile) {
-      return
-    }
+    if (!isMobile) return
     
-    // Check if touch is within the actual card elements (not the entire showcase area)
-    const cardElements = document.querySelectorAll('[data-room-showcase] .absolute')
-    let isOnCard = false
-    
-    cardElements.forEach(card => {
-      const rect = card.getBoundingClientRect()
-      const touchX = e.touches[0].clientX
-      const touchY = e.touches[0].clientY
-      
-      if (touchX >= rect.left && touchX <= rect.right && touchY >= rect.top && touchY <= rect.bottom) {
-        isOnCard = true
-      }
-    })
-    
-    // If touch is on a card, don't handle swipe navigation
-    if (isOnCard) {
-      return
+    // Check if the touch target is a link or button
+    const target = e.target as HTMLElement
+    if (target.closest('a, button, [role="button"]')) {
+      return // Don't start swipe navigation for links and buttons
     }
     
     setIsDragging(true)
@@ -212,8 +197,8 @@ export function MobileSwipeNavigation({ children }: MobileSwipeNavigationProps) 
       className="w-full h-full"
       style={{ 
         touchAction: isMobile ? 'pan-y' : 'auto',
-        userSelect: 'none',
-        WebkitUserSelect: 'none'
+        userSelect: 'text',
+        WebkitUserSelect: 'text'
       }}
     >
       <div

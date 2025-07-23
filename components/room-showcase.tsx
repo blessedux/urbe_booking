@@ -380,6 +380,13 @@ export function RoomBooking() {
   return (
     <section className="min-h-screen flex items-center justify-center" data-room-showcase>
       <div className="container mx-auto px-4">
+        {/* Title */}
+        <div className="text-center mb-8">
+          <h1 className="text-2xl md:text-3xl font-light text-white/70">
+            Book a spot at the hub
+          </h1>
+        </div>
+        
         {/* Gallery and Calendar Container */}
         <div className="relative max-w-6xl mx-auto">
           <div className="h-96 md:h-[500px] lg:h-[600px] relative">

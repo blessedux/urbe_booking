@@ -2,16 +2,12 @@ import React from "react";
 import Link from "next/link";
 
 export const Component = () => {
-  // Mobile-friendly Google Maps URL for Urbe Hub
-  const urbeHubUrl = "https://maps.google.com/maps?q=Urbe+Hub&z=17&t=m&hl=en";
-  
   return (
     <section className="flex flex-col items-center justify-center gap-2 w-full h-screen">
       <div className="flex flex-col items-center gap-8 w-1/2">
-        <FlipLink href="/book">Book</FlipLink>
         <FlipLink href="/events">Events</FlipLink>
         <FlipLink href="/unguided-tour">Tours</FlipLink>
-        <FlipLink href={urbeHubUrl} isExternal>Hub</FlipLink>
+        <FlipLink href="/book">Hub</FlipLink>
       </div>
     </section>
   );
@@ -43,20 +39,11 @@ const FlipLink = ({ children, href, isExternal = false }: { children: string; hr
     }
   };
   
-  const linkProps = isExternal ? { 
-    href, 
-    onClick: handleExternalClick,
-    rel: "noopener noreferrer" 
-  } : { href };
+  const linkClassName = "group text-white relative block overflow-hidden whitespace-nowrap text-4xl font-black uppercase sm:text-7xl md:text-8xl lg:text-9xl";
+  const linkStyle = { lineHeight: 0.75 };
   
-  return (
-    <a
-      {...linkProps}
-      className="group text-white relative block overflow-hidden whitespace-nowrap text-4xl font-black uppercase sm:text-7xl md:text-8xl lg:text-9xl"
-      style={{
-        lineHeight: 0.75,
-      }}
-    >
+  const linkContent = (
+    <>
       <div className="flex">
         {children.split("").map((letter, i) => (
           <span
@@ -83,6 +70,28 @@ const FlipLink = ({ children, href, isExternal = false }: { children: string; hr
           </span>
         ))}
       </div>
+    </>
+  );
+  
+  // Use Next.js Link for internal navigation
+  if (!isExternal) {
+    return (
+      <Link href={href} className={linkClassName} style={linkStyle}>
+        {linkContent}
+      </Link>
+    );
+  }
+  
+  // Use anchor tag for external links
+  return (
+    <a
+      href={href}
+      onClick={handleExternalClick}
+      rel="noopener noreferrer"
+      className={linkClassName}
+      style={linkStyle}
+    >
+      {linkContent}
     </a>
   );
 }; 
