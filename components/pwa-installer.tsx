@@ -15,19 +15,26 @@ export function PWAInstaller() {
   const [isInstalled, setIsInstalled] = useState(false)
 
   useEffect(() => {
+    console.log('PWA Installer: useEffect triggered', { pathname, isMobile })
+    
     // Only show on menu page
     if (pathname !== '/menu') {
+      console.log('PWA Installer: Not on menu page, returning')
       return
     }
 
     // Check if app is already installed
     if (window.matchMedia('(display-mode: standalone)').matches) {
+      console.log('PWA Installer: App already installed')
       setIsInstalled(true)
       return
     }
+    
+    console.log('PWA Installer: Setting up event listeners')
 
     // Listen for beforeinstallprompt event
     const handleBeforeInstallPrompt = (e: Event) => {
+      console.log('PWA Installer: beforeinstallprompt event received')
       e.preventDefault()
       setDeferredPrompt(e)
       setShowInstallPrompt(true)
@@ -80,10 +87,25 @@ export function PWAInstaller() {
     setShowInstallPrompt(false)
   }
 
+  // Debug function to manually trigger the prompt for testing
+  const handleDebugTrigger = () => {
+    console.log('PWA Installer: Manual debug trigger')
+    setShowInstallPrompt(true)
+  }
+
   // Only show on mobile, menu page and when conditions are met
+  console.log('PWA Installer: Render check', { isMobile, pathname, isInstalled, showInstallPrompt })
   if (!isMobile || pathname !== '/menu' || isInstalled || !showInstallPrompt) {
+    console.log('PWA Installer: Not showing toast', { 
+      notMobile: !isMobile, 
+      notMenuPage: pathname !== '/menu', 
+      alreadyInstalled: isInstalled, 
+      noPrompt: !showInstallPrompt 
+    })
     return null
   }
+  
+  console.log('PWA Installer: Showing toast')
 
   return (
     <AnimatePresence>
