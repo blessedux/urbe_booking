@@ -85,7 +85,7 @@ export function AppPreloader({
               className="w-32 h-32 md:w-40 md:h-40"
             >
               <img
-                src="/images/hnvtE6Z3_400x400.jpg"
+                src="/images/urbe_logo.jpg"
                 alt="Urbe Village"
                 className="w-full h-full object-cover rounded-full"
               />

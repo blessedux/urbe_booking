@@ -73,7 +73,7 @@ END:VCALENDAR`
                 <div className="text-center mb-6">
                   <div className="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden shadow-lg">
                     <img
-                      src="/images/hnvtE6Z3_400x400.jpg"
+                      src="/images/urbe_logo.jpg"
                       alt="Booking confirmed"
                       className="w-full h-full object-cover"
                     />

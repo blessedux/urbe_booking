@@ -10,7 +10,7 @@ const urlsToCache = [
   '/manifest.json',
   '/images/background1.png',
   '/images/UVlogo2.png',
-  '/images/hnvtE6Z3_400x400.jpg',
+  '/images/urbe_logo.jpg',
   '/icons/icon-192x192.png',
   '/icons/icon-512x512.png',
 ];
