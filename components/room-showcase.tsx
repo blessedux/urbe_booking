@@ -21,7 +21,7 @@ const Card = ({
   return (
     <div
       className={cn(
-        "w-[315px] md:w-[350px] cursor-pointer h-[420px] md:h-[400px] overflow-hidden bg-white/90 backdrop-blur-md rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.1)] select-none",
+        "w-[315px] md:w-[350px] cursor-pointer h-[420px] md:h-[400px] overflow-hidden bg-white backdrop-blur-md rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.1)] select-none",
         className
       )}
       style={{ userSelect: 'none', WebkitUserSelect: 'none' }}
@@ -368,7 +368,7 @@ export function RoomBooking() {
   const selectedRoom = selectedRoomIndex !== null ? ROOMS[selectedRoomIndex] : null
 
   return (
-    <section className="min-h-screen flex items-center justify-center">
+    <section className="min-h-screen flex items-center justify-center" data-room-showcase>
       <div className="container mx-auto px-4">
         {/* Gallery and Calendar Container */}
         <div className="relative max-w-6xl mx-auto">

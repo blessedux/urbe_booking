@@ -7,15 +7,13 @@ import { PageTransition } from "@/components/page-transition"
 
 export default function HomePage() {
   return (
-    <MobileSwipeNavigation>
-      <PageTransition className="relative">
-        <Header />
+    <PageTransition className="relative">
+      <Header />
+      <MobileSwipeNavigation>
         <main>
           <RoomBooking />
         </main>
-        
-
-      </PageTransition>
-    </MobileSwipeNavigation>
+      </MobileSwipeNavigation>
+    </PageTransition>
   )
 }

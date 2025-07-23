@@ -18,7 +18,7 @@ const msIconSizes = [
 ];
 
 async function generateIcons() {
-  const inputPath = path.join(__dirname, '../public/images/UVlogo2.png');
+  const inputPath = path.join(__dirname, '../public/images/urbe_logo.jpg');
   const outputDir = path.join(__dirname, '../public/icons');
 
   // Ensure output directory exists

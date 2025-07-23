@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useIsMobile } from "@/hooks/use-mobile"
 
@@ -55,6 +55,19 @@ export function MobileSwipeNavigation({ children }: MobileSwipeNavigationProps) 
   const handleTouchStart = (e: TouchEvent) => {
     if (!isMobile) {
       return
+    }
+    
+    // Check if touch is within the room showcase area
+    const roomShowcase = document.querySelector('[data-room-showcase]')
+    if (roomShowcase) {
+      const rect = roomShowcase.getBoundingClientRect()
+      const touchX = e.touches[0].clientX
+      const touchY = e.touches[0].clientY
+      
+      // If touch is within the room showcase area, don't handle swipe navigation
+      if (touchX >= rect.left && touchX <= rect.right && touchY >= rect.top && touchY <= rect.bottom) {
+        return
+      }
     }
     
     setIsDragging(true)
@@ -150,7 +163,7 @@ export function MobileSwipeNavigation({ children }: MobileSwipeNavigationProps) 
         style={{
           filter: `blur(${getMotionBlur()}px)`,
           transition: isDragging ? 'none' : 'filter 0.3s ease-out',
-          transform: isDragging ? `translateX(${(dragStartX - dragCurrentX) * 0.1}px) skewX(${getBlurDirection() * 0.5}deg)` : 'translateX(0) skewX(0deg)',
+          transform: isDragging ? `translateX(${(dragCurrentX - dragStartX) * 0.1}px) skewX(${getBlurDirection() * 0.5}deg)` : 'translateX(0) skewX(0deg)',
           transitionProperty: isDragging ? 'none' : 'filter, transform'
         }}
       >

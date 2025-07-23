@@ -475,6 +475,44 @@ function PhotoGallery({
 }
 
 export default function EventsPage() {
+  const [rotation, setRotation] = useState(0)
+  const [isDragging, setIsDragging] = useState(false)
+
+  // Listen for touch events to add rotation
+  useEffect(() => {
+    const handleTouchStart = (e: TouchEvent) => {
+      setIsDragging(true)
+    }
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!isDragging) return
+      
+      const touch = e.touches[0]
+      const centerX = window.innerWidth / 2
+      const deltaX = touch.clientX - centerX
+      
+      // Calculate rotation based on touch position (opposite direction)
+      const maxRotation = 15 // Maximum rotation in degrees
+      const rotationAmount = -(deltaX / centerX) * maxRotation
+      setRotation(rotationAmount)
+    }
+
+    const handleTouchEnd = () => {
+      setIsDragging(false)
+      setRotation(0)
+    }
+
+    document.addEventListener('touchstart', handleTouchStart, { passive: true })
+    document.addEventListener('touchmove', handleTouchMove, { passive: true })
+    document.addEventListener('touchend', handleTouchEnd, { passive: true })
+
+    return () => {
+      document.removeEventListener('touchstart', handleTouchStart)
+      document.removeEventListener('touchmove', handleTouchMove)
+      document.removeEventListener('touchend', handleTouchEnd)
+    }
+  }, [isDragging])
+
   // Event organizers data for the tooltip
   const eventOrganizers = [
     {
@@ -501,11 +539,17 @@ export default function EventsPage() {
   ];
 
   return (
-    <MobileSwipeNavigation>
-      <PageTransition>
-        <Header />
-        
-        <main className="relative z-10 overflow-hidden">  
+    <PageTransition>
+      <Header />
+      
+      <MobileSwipeNavigation>
+        <main 
+          className="relative z-10 overflow-hidden"
+          style={{
+            transform: `rotateY(${rotation}deg)`,
+            transition: isDragging ? 'none' : 'transform 0.3s ease-out'
+          }}
+        >  
           <PhotoGallery />
           
           {/* Animated Tooltip Section */}
@@ -518,7 +562,7 @@ export default function EventsPage() {
             </div>
           </div>
         </main>
-      </PageTransition>
-    </MobileSwipeNavigation>
+      </MobileSwipeNavigation>
+    </PageTransition>
   );
 } 

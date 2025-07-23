@@ -50,7 +50,17 @@ const Toast = React.forwardRef<
       ref={ref}
       className={cn(toastVariants({ variant }), className)}
       {...props}
-    />
+    >
+      {/* UV Logo */}
+      <div className="flex items-center mr-3">
+        <img 
+          src="/images/urbe_logo.jpg" 
+          alt="Urbe Village" 
+          className="h-6 w-6 object-cover rounded-full"
+        />
+      </div>
+      {props.children}
+    </ToastPrimitives.Root>
   )
 })
 Toast.displayName = ToastPrimitives.Root.displayName
