@@ -81,23 +81,32 @@ export function MobileSwipeNavigation({ children }: MobileSwipeNavigationProps) 
     const deltaX = dragStartX - dragCurrentX
     const currentPath = window.location.pathname
     
+    // Exclude home page (menu) from swipe navigation - it should be accessed via header icon
+    if (currentPath === '/') {
+      return false
+    }
+    
     if (deltaX > 0) {
       // Swiping left to right
       if (currentPath === '/profile') {
-        return false // No navigation on profile page for left to right
-      } else if (currentPath === '/') {
+        return true // Can go to book (hub)
+      } else if (currentPath === '/book') {
         return true // Can go to profile
       } else if (currentPath === '/events') {
-        return true // Can go to home
+        return true // Can go to book (hub)
+      } else if (currentPath === '/unguided-tour') {
+        return true // Can go to book (hub)
       }
     } else {
       // Swiping right to left
       if (currentPath === '/events') {
-        return false // No navigation on events page for right to left
-      } else if (currentPath === '/') {
+        return true // Can go to book (hub)
+      } else if (currentPath === '/book') {
         return true // Can go to events
       } else if (currentPath === '/profile') {
-        return true // Can go to home
+        return true // Can go to book (hub)
+      } else if (currentPath === '/unguided-tour') {
+        return true // Can go to book (hub)
       }
     }
     
@@ -139,23 +148,32 @@ export function MobileSwipeNavigation({ children }: MobileSwipeNavigationProps) 
     if (Math.abs(deltaX) > minSwipeDistance && deltaY < maxVerticalMovement) {
       const currentPath = window.location.pathname
       
+      // Exclude home page (menu) from swipe navigation - it should be accessed via header icon
+      if (currentPath === '/') {
+        return
+      }
+      
       if (deltaX > 0) {
         // Swiped left to right
         if (currentPath === '/profile') {
-          // Stay on profile page (opposite direction)
-        } else if (currentPath === '/') {
+          router.push('/book')
+        } else if (currentPath === '/book') {
           router.push('/profile')
         } else if (currentPath === '/events') {
-          router.push('/')
+          router.push('/book')
+        } else if (currentPath === '/unguided-tour') {
+          router.push('/book')
         }
       } else {
         // Swiped right to left
         if (currentPath === '/events') {
-          // Stay on events page
-        } else if (currentPath === '/') {
+          router.push('/book')
+        } else if (currentPath === '/book') {
           router.push('/events')
         } else if (currentPath === '/profile') {
-          router.push('/')
+          router.push('/book')
+        } else if (currentPath === '/unguided-tour') {
+          router.push('/book')
         }
       }
     }
