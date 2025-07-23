@@ -7,6 +7,11 @@ export function useIsMobile() {
 
   React.useEffect(() => {
     const checkIsMobile = () => {
+      // Check if we're in a browser environment
+      if (typeof window === 'undefined') {
+        return
+      }
+
       // Check screen width
       const isSmallScreen = window.innerWidth < MOBILE_BREAKPOINT
       
@@ -31,15 +36,18 @@ export function useIsMobile() {
       setIsMobile(mobile)
     }
 
-    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`)
-    const onChange = () => {
+    // Only run on client side
+    if (typeof window !== 'undefined') {
+      const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`)
+      const onChange = () => {
+        checkIsMobile()
+      }
+      
+      mql.addEventListener("change", onChange)
       checkIsMobile()
+      
+      return () => mql.removeEventListener("change", onChange)
     }
-    
-    mql.addEventListener("change", onChange)
-    checkIsMobile()
-    
-    return () => mql.removeEventListener("change", onChange)
   }, [])
 
   return !!isMobile

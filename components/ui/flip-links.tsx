@@ -19,6 +19,11 @@ const FlipLink = ({ children, href, isExternal = false }: { children: string; hr
     if (isExternal) {
       e.preventDefault();
       
+      // Check if we're in a browser environment
+      if (typeof window === 'undefined' || typeof navigator === 'undefined') {
+        return;
+      }
+      
       // Check if it's a mobile device
       const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       

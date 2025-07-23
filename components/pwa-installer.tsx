@@ -19,6 +19,11 @@ export function PWAInstaller() {
   const [hasBeenDismissed, setHasBeenDismissed] = useState(false)
 
   useEffect(() => {
+    // Check if we're in a browser environment
+    if (typeof window === 'undefined' || typeof navigator === 'undefined') {
+      return
+    }
+
     console.log('🔍 PWA Debug: useEffect triggered', { 
       pathname, 
       isMobile, 
@@ -284,6 +289,11 @@ export function PWAInstaller() {
 
   // Only show on mobile, menu page and when conditions are met
   const isStrictMobile = () => {
+    // Check if we're in a browser environment
+    if (typeof window === 'undefined' || typeof navigator === 'undefined') {
+      return false
+    }
+    
     const userAgent = navigator.userAgent.toLowerCase()
     const isMobileUA = /android|iphone|ipad|ipod|blackberry|iemobile|opera mini|mobile|tablet/i.test(userAgent)
     const isSmallScreen = window.innerWidth <= 768

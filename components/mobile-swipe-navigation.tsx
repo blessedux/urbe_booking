@@ -79,6 +79,12 @@ export function MobileSwipeNavigation({ children }: MobileSwipeNavigationProps) 
     if (!isDragging || !isMobile) return false
     
     const deltaX = dragStartX - dragCurrentX
+    
+    // Check if we're in a browser environment
+    if (typeof window === 'undefined') {
+      return false
+    }
+    
     const currentPath = window.location.pathname
     
     // Exclude home page (menu) from swipe navigation - it should be accessed via header icon
@@ -146,6 +152,11 @@ export function MobileSwipeNavigation({ children }: MobileSwipeNavigationProps) 
     
     // Only process horizontal swipes with minimal vertical movement
     if (Math.abs(deltaX) > minSwipeDistance && deltaY < maxVerticalMovement) {
+      // Check if we're in a browser environment
+      if (typeof window === 'undefined') {
+        return
+      }
+      
       const currentPath = window.location.pathname
       
       // Exclude home page (menu) from swipe navigation - it should be accessed via header icon

@@ -1,11 +1,20 @@
 import type React from "react"
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
 import { AppPreloader } from "@/components/app-preloader"
 import { PWAInstaller } from "@/components/pwa-installer"
 
 const inter = Inter({ subsets: ["latin"] })
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  themeColor: '#dc2626',
+  colorScheme: 'dark',
+}
 
 export const metadata: Metadata = {
   title: "Urbe Village Booking",
@@ -58,14 +67,6 @@ export const metadata: Metadata = {
     description: 'Book your co-working space at Urbe Village for ETH Rome',
     images: ['/images/UVlogo2.png'],
   },
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
-  },
-  themeColor: '#dc2626',
-  colorScheme: 'dark',
   other: {
     'application-name': 'Urbe Village Booking',
     'apple-mobile-web-app-capable': 'yes',
