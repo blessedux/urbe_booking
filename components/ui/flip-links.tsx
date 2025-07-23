@@ -5,9 +5,10 @@ export const Component = () => {
   return (
     <section className="flex flex-col items-center justify-center gap-2 w-full h-screen">
       <div className="flex flex-col items-center gap-8 w-1/2">
-        <FlipLink href="/events">Events</FlipLink>
-        <FlipLink href="/unguided-tour">Tours</FlipLink>
         <FlipLink href="/book">Hub</FlipLink>
+        <FlipLink href="/unguided-tour">Tours</FlipLink>
+        <FlipLink href="https://cherry.builders" isExternal>Hack</FlipLink>
+        <FlipLink href="/events">Events</FlipLink>
       </div>
     </section>
   );
