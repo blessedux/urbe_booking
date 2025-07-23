@@ -26,8 +26,8 @@ export function Header() {
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
         {/* Left: ETHRome Logo Button */}
         <Link href="/menu" passHref legacyBehavior>
-          <Button variant="ghost" className="text-white hover:bg-white/20 p-0 bg-transparent flex items-center [&_svg]:!w-8 [&_svg]:!h-8">
-            <ETHRomeLogo className="h-8 w-8" style={{ width: '32px', height: '32px' }} />
+          <Button variant="ghost" className="text-white hover:bg-white/20 p-0 bg-transparent flex items-center [&_svg]:!w-10 [&_svg]:!h-10">
+            <ETHRomeLogo className="h-10 w-10" style={{ width: '40px', height: '40px' }} />
             <span className="sr-only">Menu</span>
           </Button>
         </Link>

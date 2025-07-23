@@ -5,9 +5,11 @@ import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Download, X } from 'lucide-react'
+import { useIsMobile } from '@/hooks/use-mobile'
 
 export function PWAInstaller() {
   const pathname = usePathname()
+  const isMobile = useIsMobile()
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null)
   const [showInstallPrompt, setShowInstallPrompt] = useState(false)
   const [isInstalled, setIsInstalled] = useState(false)
@@ -78,8 +80,8 @@ export function PWAInstaller() {
     setShowInstallPrompt(false)
   }
 
-  // Only show on menu page and when conditions are met
-  if (pathname !== '/menu' || isInstalled || !showInstallPrompt) {
+  // Only show on mobile, menu page and when conditions are met
+  if (!isMobile || pathname !== '/menu' || isInstalled || !showInstallPrompt) {
     return null
   }
 

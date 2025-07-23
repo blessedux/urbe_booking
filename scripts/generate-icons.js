@@ -27,22 +27,56 @@ async function generateIcons() {
   }
 
   try {
-    // Generate standard PWA icons
+    // Generate standard PWA icons with white background and 20% smaller logo
     for (const size of iconSizes) {
-      await sharp(inputPath)
-        .resize(size, size)
-        .png()
-        .toFile(path.join(outputDir, `icon-${size}x${size}.png`));
+      const logoSize = Math.floor(size * 0.8); // 20% smaller
+      const padding = Math.floor((size - logoSize) / 2);
+      
+      await sharp({
+        create: {
+          width: size,
+          height: size,
+          channels: 4,
+          background: { r: 255, g: 255, b: 255, alpha: 1 } // White background
+        }
+      })
+      .composite([{
+        input: await sharp(inputPath)
+          .resize(logoSize, logoSize)
+          .png()
+          .toBuffer(),
+        top: padding,
+        left: padding
+      }])
+      .png()
+      .toFile(path.join(outputDir, `icon-${size}x${size}.png`));
       
       console.log(`✅ Generated icon-${size}x${size}.png`);
     }
 
-    // Generate Apple touch icons
+    // Generate Apple touch icons with white background and 20% smaller logo
     for (const size of appleIconSizes) {
-      await sharp(inputPath)
-        .resize(size, size)
-        .png()
-        .toFile(path.join(outputDir, `apple-touch-icon-${size}x${size}.png`));
+      const logoSize = Math.floor(size * 0.8); // 20% smaller
+      const padding = Math.floor((size - logoSize) / 2);
+      
+      await sharp({
+        create: {
+          width: size,
+          height: size,
+          channels: 4,
+          background: { r: 255, g: 255, b: 255, alpha: 1 } // White background
+        }
+      })
+      .composite([{
+        input: await sharp(inputPath)
+          .resize(logoSize, logoSize)
+          .png()
+          .toBuffer(),
+        top: padding,
+        left: padding
+      }])
+      .png()
+      .toFile(path.join(outputDir, `apple-touch-icon-${size}x${size}.png`));
       
       console.log(`✅ Generated apple-touch-icon-${size}x${size}.png`);
     }
@@ -57,7 +91,7 @@ async function generateIcons() {
       console.log(`✅ Generated ms-icon-${size}x${size}.png`);
     }
 
-    // Generate favicon.ico (16x16)
+    // Generate circular favicons with no background
     await sharp(inputPath)
       .resize(16, 16)
       .png()
@@ -68,7 +102,7 @@ async function generateIcons() {
       .png()
       .toFile(path.join(outputDir, 'favicon-32x32.png'));
 
-    // Create a simple favicon.ico (PNG format for simplicity)
+    // Create a circular favicon.ico (PNG format for simplicity)
     await sharp(inputPath)
       .resize(16, 16)
       .png()
