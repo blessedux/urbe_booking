@@ -217,10 +217,6 @@ const StackedCardsInteraction = ({
       >
         <div className="relative w-[315px] md:w-[350px] h-[420px] md:h-[400px]">
         {limitedCards.map((card, index) => {
-          const isFirst = index === 0
-          const isSelected = selectedRoomIndex !== null && selectedRoomIndex === index
-          const isCurrentCard = index === currentCardIndex
-
           // Calculate the correct card indices for each position
           const totalCards = cards.length
           let cardIndex = currentCardIndex
@@ -233,6 +229,10 @@ const StackedCardsInteraction = ({
             cardIndex = currentCardIndex === totalCards - 1 ? 0 : currentCardIndex + 1
           }
           // index === 0 is center card - uses currentCardIndex
+
+          const isFirst = index === 0
+          const isSelected = selectedRoomIndex !== null && selectedRoomIndex === cardIndex
+          const isCurrentCard = index === 0
 
           let xOffset = 0
           let rotation = 0
@@ -271,7 +271,12 @@ const StackedCardsInteraction = ({
                 type: "spring",
               }}
               layout={false}
-              onClick={() => !isSelected && !isDragging && onCardClick?.(currentCardIndex)}
+              onClick={() => {
+                if (!isSelected && !isDragging) {
+                  console.log('Card clicked:', { index, cardIndex, currentCardIndex, isSelected, isDragging })
+                  onCardClick?.(cardIndex)
+                }
+              }}
             >
               <Card
                 className={isCurrentCard ? "z-10 cursor-pointer" : "z-0"}
@@ -308,6 +313,7 @@ export function RoomBooking() {
   }))
 
   const handleRoomSelect = (roomIndex: number) => {
+    console.log('handleRoomSelect called with roomIndex:', roomIndex)
     setSelectedRoomIndex(roomIndex)
   }
 
@@ -347,8 +353,12 @@ export function RoomBooking() {
   useEffect(() => {
     const handleGlobalClick = (event: Event) => {
       if (selectedRoomIndex !== null && calendarRef.current) {
-        // Check if click is outside the calendar
-        if (!calendarRef.current.contains(event.target as Node)) {
+        // Check if click is outside the calendar and not on header elements
+        const target = event.target as Element
+        const isHeaderClick = target.closest('header') !== null
+        const isCalendarClick = calendarRef.current.contains(target)
+        
+        if (!isCalendarClick && !isHeaderClick) {
           handleBackToGallery()
         }
       }

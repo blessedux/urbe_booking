@@ -110,17 +110,23 @@ export function MobileSwipeNavigation({ children }: MobileSwipeNavigationProps) 
       return
     }
     
-    // Check if touch is within the room showcase area
-    const roomShowcase = document.querySelector('[data-room-showcase]')
-    if (roomShowcase) {
-      const rect = roomShowcase.getBoundingClientRect()
+    // Check if touch is within the actual card elements (not the entire showcase area)
+    const cardElements = document.querySelectorAll('[data-room-showcase] .absolute')
+    let isOnCard = false
+    
+    cardElements.forEach(card => {
+      const rect = card.getBoundingClientRect()
       const touchX = e.touches[0].clientX
       const touchY = e.touches[0].clientY
       
-      // If touch is within the room showcase area, don't handle swipe navigation
       if (touchX >= rect.left && touchX <= rect.right && touchY >= rect.top && touchY <= rect.bottom) {
-        return
+        isOnCard = true
       }
+    })
+    
+    // If touch is on a card, don't handle swipe navigation
+    if (isOnCard) {
+      return
     }
     
     setIsDragging(true)
