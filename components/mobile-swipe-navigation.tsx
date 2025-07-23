@@ -16,7 +16,6 @@ export function MobileSwipeNavigation({ children }: MobileSwipeNavigationProps) 
   const [dragStartY, setDragStartY] = useState(0)
   const [dragCurrentX, setDragCurrentX] = useState(0)
   const [dragCurrentY, setDragCurrentY] = useState(0)
-  const [showSwipeHint, setShowSwipeHint] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
 
   // Minimum swipe distance (in px)
@@ -134,7 +133,6 @@ export function MobileSwipeNavigation({ children }: MobileSwipeNavigationProps) 
     setDragStartY(e.touches[0].clientY)
     setDragCurrentX(e.touches[0].clientX)
     setDragCurrentY(e.touches[0].clientY)
-    setShowSwipeHint(false)
   }
 
   const handleTouchMove = (e: TouchEvent) => {
@@ -142,12 +140,6 @@ export function MobileSwipeNavigation({ children }: MobileSwipeNavigationProps) 
     
     setDragCurrentX(e.touches[0].clientX)
     setDragCurrentY(e.touches[0].clientY)
-    
-    // Show swipe hint when dragging starts
-    const deltaX = dragStartX - e.touches[0].clientX
-    if (Math.abs(deltaX) > 20) {
-      setShowSwipeHint(true)
-    }
   }
 
   const handleTouchEnd = () => {
@@ -239,39 +231,6 @@ export function MobileSwipeNavigation({ children }: MobileSwipeNavigationProps) 
       >
         {children}
       </div>
-      
-      {/* Swipe Hint Overlay */}
-      {isMobile && showSwipeHint && (() => {
-        const currentPath = window.location.pathname
-        const isSwipingLeftToRight = dragStartX > dragCurrentX
-        
-        let hintText = ''
-        if (isSwipingLeftToRight) {
-          if (currentPath === '/profile') {
-            hintText = '← Home'
-          } else if (currentPath === '/') {
-            hintText = '← Profile'
-          } else if (currentPath === '/events') {
-            hintText = '← Home'
-          }
-        } else {
-          if (currentPath === '/events') {
-            hintText = 'Home →'
-          } else if (currentPath === '/') {
-            hintText = 'Events →'
-          } else if (currentPath === '/profile') {
-            hintText = 'Home →'
-          }
-        }
-        
-        return (
-          <div className="fixed inset-0 pointer-events-none z-50 flex items-center justify-center">
-            <div className="bg-black/20 backdrop-blur-sm rounded-full px-6 py-3 text-white text-sm font-medium animate-pulse">
-              {hintText}
-            </div>
-          </div>
-        )
-      })()}
     </div>
   )
 } 

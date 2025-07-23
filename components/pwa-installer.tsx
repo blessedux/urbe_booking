@@ -15,19 +15,62 @@ export function PWAInstaller() {
   const [isInstalled, setIsInstalled] = useState(false)
 
   useEffect(() => {
+    console.log('🔍 PWA Debug: useEffect triggered', { 
+      pathname, 
+      isMobile, 
+      userAgent: navigator.userAgent,
+      displayMode: window.matchMedia('(display-mode: standalone)').matches
+    })
+    
     // Only show on menu page
     if (pathname !== '/menu') {
+      console.log('🔍 PWA Debug: Not on menu page, returning')
       return
     }
 
     // Check if app is already installed
     if (window.matchMedia('(display-mode: standalone)').matches) {
+      console.log('🔍 PWA Debug: App already installed')
       setIsInstalled(true)
       return
     }
+    
+    console.log('🔍 PWA Debug: Setting up event listeners')
+
+    // Check PWA installation criteria
+    const checkPWACriteria = () => {
+      console.log('🔍 PWA Debug: Checking installation criteria...')
+      
+      // Check if service worker is registered
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(registrations => {
+          console.log('🔍 PWA Debug: Service worker registrations:', registrations.length)
+        })
+      }
+      
+      // Check if manifest is accessible
+      fetch('/manifest.json')
+        .then(response => {
+          console.log('🔍 PWA Debug: Manifest accessible:', response.ok)
+          return response.json()
+        })
+        .then(manifest => {
+          console.log('🔍 PWA Debug: Manifest content:', {
+            name: manifest.name,
+            short_name: manifest.short_name,
+            icons: manifest.icons?.length || 0
+          })
+        })
+        .catch(error => {
+          console.log('🔍 PWA Debug: Manifest error:', error)
+        })
+    }
+    
+    checkPWACriteria()
 
     // Listen for beforeinstallprompt event
     const handleBeforeInstallPrompt = (e: Event) => {
+      console.log('🔍 PWA Debug: beforeinstallprompt event received!', e)
       e.preventDefault()
       setDeferredPrompt(e)
       setShowInstallPrompt(true)
@@ -81,9 +124,25 @@ export function PWAInstaller() {
   }
 
   // Only show on mobile, menu page and when conditions are met
+  console.log('🔍 PWA Debug: Render check', { 
+    isMobile, 
+    pathname, 
+    isInstalled, 
+    showInstallPrompt,
+    deferredPrompt: !!deferredPrompt
+  })
+  
   if (!isMobile || pathname !== '/menu' || isInstalled || !showInstallPrompt) {
+    console.log('🔍 PWA Debug: Not showing toast', { 
+      notMobile: !isMobile, 
+      notMenuPage: pathname !== '/menu', 
+      alreadyInstalled: isInstalled, 
+      noPrompt: !showInstallPrompt 
+    })
     return null
   }
+  
+  console.log('🔍 PWA Debug: Showing toast!')
 
   return (
     <AnimatePresence>
