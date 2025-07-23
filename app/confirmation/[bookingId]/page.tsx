@@ -55,7 +55,7 @@ END:VCALENDAR`
   }
 
   const handleGoHome = () => {
-    router.push('/menu')
+    router.push('/')
   }
 
   return (

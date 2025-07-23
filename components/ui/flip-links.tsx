@@ -5,18 +5,21 @@ export const Component = () => {
   return (
     <section className="flex flex-col items-center justify-center gap-2 w-full h-screen">
       <div className="flex flex-col items-center gap-8 w-1/2">
+        <FlipLink href="/book">Book</FlipLink>
         <FlipLink href="/events">Events</FlipLink>
         <FlipLink href="/unguided-tour">Tours</FlipLink>
-        <FlipLink href="/">Hub</FlipLink>
+        <FlipLink href="https://www.google.com/maps/place/Urbe+Hub/data=!4m2!3m1!1s0x0:0xe7f07f0072499a3f?sa=X&ved=1t:2428&ictx=111" isExternal>Hub</FlipLink>
       </div>
     </section>
   );
 };
 
-const FlipLink = ({ children, href }: { children: string; href: string }) => {
+const FlipLink = ({ children, href, isExternal = false }: { children: string; href: string; isExternal?: boolean }) => {
+  const linkProps = isExternal ? { href, target: "_blank", rel: "noopener noreferrer" } : { href };
+  
   return (
-    <Link
-      href={href}
+    <a
+      {...linkProps}
       className="group text-white relative block overflow-hidden whitespace-nowrap text-4xl font-black uppercase sm:text-7xl md:text-8xl lg:text-9xl"
       style={{
         lineHeight: 0.75,
@@ -48,6 +51,6 @@ const FlipLink = ({ children, href }: { children: string; href: string }) => {
           </span>
         ))}
       </div>
-    </Link>
+    </a>
   );
 }; 

@@ -1,7 +1,6 @@
 const CACHE_NAME = 'urbe-village-v1';
 const urlsToCache = [
   '/',
-  '/menu',
   '/profile',
   '/events',
   '/city-tours',

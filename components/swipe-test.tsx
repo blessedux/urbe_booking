@@ -433,11 +433,6 @@ const CSSCarousel = () => {
             <p className="text-lg opacity-90 text-center mb-6">{testCards[originalIndex].description}</p>
             <div className="text-sm opacity-75 text-center">
               <p>Card {originalIndex + 1} of {testCards.length}</p>
-              {displayIndex === 0 && (
-                <div className="mt-4 text-lg animate-pulse">
-                  ← Swipe to navigate →
-                </div>
-              )}
             </div>
           </div>
         </article>

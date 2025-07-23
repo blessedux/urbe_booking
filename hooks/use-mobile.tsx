@@ -6,12 +6,39 @@ export function useIsMobile() {
   const [isMobile, setIsMobile] = React.useState<boolean | undefined>(undefined)
 
   React.useEffect(() => {
+    const checkIsMobile = () => {
+      // Check screen width
+      const isSmallScreen = window.innerWidth < MOBILE_BREAKPOINT
+      
+      // Check user agent for mobile devices
+      const isMobileUserAgent = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+      
+      // Check for touch capability
+      const hasTouchScreen = 'ontouchstart' in window || navigator.maxTouchPoints > 0
+      
+      // Consider it mobile if any of these conditions are true
+      const mobile = isSmallScreen || isMobileUserAgent || hasTouchScreen
+      
+      console.log('🔍 Mobile Detection:', {
+        screenWidth: window.innerWidth,
+        isSmallScreen,
+        isMobileUserAgent,
+        hasTouchScreen,
+        userAgent: navigator.userAgent,
+        result: mobile
+      })
+      
+      setIsMobile(mobile)
+    }
+
     const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`)
     const onChange = () => {
-      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
+      checkIsMobile()
     }
+    
     mql.addEventListener("change", onChange)
-    setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
+    checkIsMobile()
+    
     return () => mql.removeEventListener("change", onChange)
   }, [])
 

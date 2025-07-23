@@ -26,7 +26,7 @@ export function AppPreloader({
       setShowLoader(false)
       setHasLoaded(true)
       // Navigate to menu if already loaded
-      router.push('/menu')
+      router.push('/')
       return
     }
 
@@ -40,7 +40,7 @@ export function AppPreloader({
         // Mark as loaded in session storage
         sessionStorage.setItem('urbe-village-loaded', 'true')
         // Navigate to menu page
-        router.push('/menu')
+        router.push('/')
       }, 500)
     }, loadingDuration)
 
@@ -54,10 +54,17 @@ export function AppPreloader({
 
   return (
     <div className="relative min-h-screen">
-      {/* Background - same as homepage */}
-      <div 
+      {/* Background with blur animation */}
+      <motion.div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: 'url(/images/background1.png)' }}
+        animate={{
+          filter: showLoader ? 'blur(20px)' : 'blur(0px)'
+        }}
+        transition={{
+          duration: 0.8,
+          ease: "easeInOut"
+        }}
       />
       
       {/* Only show children if not loading */}
