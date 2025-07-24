@@ -54,23 +54,6 @@ export default function UnguidedTourPage() {
             UNGUIDED TOURS
           </motion.h1>
           
-          {/* Two-line title pushed to the left - no hover interaction */}
-          <motion.div 
-            className="absolute left-8 top-1/2 transform -translate-y-1/2 text-6xl md:text-8xl lg:text-[10rem] font-black text-white/20 drop-shadow-lg pointer-events-none"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.3 }}
-            transition={{ delay: 0.2, duration: 1 }}
-          >
-            <div className="flex flex-col space-y-4">
-              <span className="font-sans tracking-widest">
-                UNGUIDED
-              </span>
-              <span className="font-sans tracking-widest">
-                TOURS
-              </span>
-            </div>
-          </motion.div>
-          
           {/* Centered pong loader and city map loading */}
           <div className="relative z-10 flex flex-col items-center space-y-8">
             <DotLoader

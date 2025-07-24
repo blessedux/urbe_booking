@@ -525,7 +525,7 @@ export default function EventsPage() {
     {
       id: 2,
       name: "deca12x",
-      designation: "Blockchain Expert",
+      designation: "Web3 Developer",
       image: "/images/deca12x.jpg",
       twitter: "https://x.com/deca12x",
     },

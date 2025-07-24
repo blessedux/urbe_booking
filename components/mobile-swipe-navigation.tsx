@@ -128,6 +128,12 @@ export function MobileSwipeNavigation({ children }: MobileSwipeNavigationProps) 
       return // Don't start swipe navigation for links and buttons
     }
     
+    // Check if the touch is happening on the room-showcase component
+    const roomShowcase = target.closest('[data-room-showcase]')
+    if (roomShowcase) {
+      return // Don't start swipe navigation when touching room-showcase
+    }
+    
     setIsDragging(true)
     setDragStartX(e.touches[0].clientX)
     setDragStartY(e.touches[0].clientY)
